@@ -1,0 +1,36 @@
+# render.yaml — Render Blueprint for Angel Burgos's Unified Command Center & Agent Companion
+# Deploys directly into your Render workspace alongside iptv-api (srv-daffgtf40ujc73b38jog)
+services:
+  - type: web
+    name: myiad-command-center
+    runtime: node
+    plan: starter
+    region: ohio
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false # Connect to Neon (ep-winter-poetry-ae51hoth) or VPS Postgres (34.148.244.49:5432)
+      - key: VPS_POSTGRES_URL
+        sync: false # Optional secondary pool for 34.148.244.49:5432 (vault_app_angelburgosrosado)
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: RENDER_API_KEY
+        sync: false
+      - key: GITHUB_PAT
+        sync: false
+
+  - type: cron
+    name: myiad-ecosystem-health-monitor
+    runtime: node
+    schedule: "*/10 * * * *"
+    buildCommand: npm install && npm run build
+    startCommand: node dist/health-worker.cjs
+    envVars:
+      - key: DATABASE_URL
+        sync: false

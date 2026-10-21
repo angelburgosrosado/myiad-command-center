@@ -1,0 +1,24 @@
+{
+  "name": "myiad-command-center",
+  "version": "2.0.0",
+  "description": "Full-Stack Multi-Agent Command Center & DevOps Control Plane for Angel Burgos (Render + Neon + VPS PostgreSQL)",
+  "main": "dist/server.cjs",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --outfile=dist/server.cjs --external:pg-native && esbuild src/health-worker.ts --bundle --platform=node --target=node20 --outfile=dist/health-worker.cjs --external:pg-native",
+    "start": "node dist/server.cjs",
+    "db:migrate": "psql $DATABASE_URL -f sql/schema.sql"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "esbuild": "^0.24.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
