@@ -41,12 +41,14 @@ services:
     runtime: node
     plan: starter
     region: ohio
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: 20
       - key: PORT
         value: 10000
       - key: DATABASE_URL
@@ -64,10 +66,16 @@ services:
     name: myiad-ecosystem-health-monitor
     runtime: node
     schedule: "*/10 * * * *"
-    buildCommand: npm install && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: node dist/health-worker.cjs
     envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20
       - key: DATABASE_URL
+        sync: false
+      - key: VPS_POSTGRES_URL
         sync: false
 ```
 
