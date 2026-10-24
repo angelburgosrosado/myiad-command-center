@@ -306,6 +306,20 @@ app.post('/api/admin/actions/restart-render', async (req, res) => {
   }
 });
 
+// 4b. Action: Sync Render Environment Variables & Deploy
+app.post('/api/admin/actions/sync-render-env', async (req, res) => {
+  try {
+    const { service_id, env_vars } = req.body;
+    if (!service_id || !Array.isArray(env_vars)) {
+      return res.status(400).json({ error: 'service_id and env_vars array required' });
+    }
+    const result = await adminVault.syncRenderEnvVars(service_id, env_vars);
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // 5. Action: Push Telegram Alert or Digest
 app.post('/api/admin/actions/push-telegram', async (req, res) => {
   try {

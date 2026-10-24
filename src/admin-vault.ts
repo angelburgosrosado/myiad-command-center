@@ -357,6 +357,41 @@ export class AdminVault {
     }
   }
 
+  // --- TOOL AUTOMATION: RENDER ENV VARS SYNC & DEPLOY ---
+  public async syncRenderEnvVars(serviceId: string, envVars: Array<{ key: string; value: string }>): Promise<{ success: boolean; message: string }> {
+    const apiKey = this.getRawKey('RENDER_API_KEY');
+    if (!apiKey) return { success: false, message: 'RENDER_API_KEY is not configured in Administrative Vault.' };
+
+    try {
+      const resp = await fetch(`https://api.render.com/v1/services/${serviceId}/env-vars`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(envVars)
+      });
+      if (resp.ok) {
+        // Trigger a new deployment to pick up the updated environment variables
+        await fetch(`https://api.render.com/v1/services/${serviceId}/deploys`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify({ clearCache: 'do_not_clear' })
+        });
+        return { success: true, message: `Successfully synced env vars and triggered deploy on Render service ${serviceId}` };
+      }
+      const errText = await resp.text();
+      return { success: false, message: `Render env sync failed for ${serviceId} (HTTP ${resp.status}): ${errText}` };
+    } catch (e: any) {
+      return { success: false, message: e.message };
+    }
+  }
+
   // --- TOOL AUTOMATION: GITHUB PULL REQUEST AUTOMATION ---
   public async createGitHubPR(params: {
     branch: string;
