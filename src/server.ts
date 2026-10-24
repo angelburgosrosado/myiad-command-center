@@ -81,7 +81,7 @@ app.get('/api/health', async (_req, res) => {
     database: {
       poolConnected: dbOnline,
       isolatedSchema: SCHEMA_NAME,
-      neonEndpoint: 'ep-winter-poetry-ae51hoth.us-east-2.aws.neon.tech',
+      neonEndpoint: (process.env.DATABASE_URL || '').split('@')[1]?.split('/')[0] || 'ep-summer-block-b5fdfrpo-pooler.c-7.us-east-2.aws.neon.tech',
       vpsPostgresTcp5432: vpsReachable ? 'OPEN (34.148.244.49:5432)' : 'FILTERED / OFFLINE'
     },
     renderServices: [
