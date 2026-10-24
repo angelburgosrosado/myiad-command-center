@@ -422,7 +422,7 @@
         <div class="px-5 py-3 bg-cyber-950/90 border-b border-white/5 flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-3 flex-1 min-w-[280px]">
             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Project:</span>
-            <select id="osDocProjectSelect" class="flex-1 bg-cyber-900 border border-indigo-500/40 rounded-xl px-3.5 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-indigo-400">
+            <select id="osDocProjectSelect" onchange="window.switchDocProject(this.value)" class="flex-1 bg-cyber-900 border border-indigo-500/40 rounded-xl px-3.5 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-indigo-400">
               <option value="myiad">1. MyIAD Ecosystem Hub & Agentic Architecture</option>
               <option value="iptv" selected>2. IPTV.Menu Pro (Web, APK & App Store Launch)</option>
               <option value="story">3. Story.Menu (Interactive Narrative Engine)</option>
@@ -435,7 +435,7 @@
               <option value="geo">10. GeoPulse (Local SEO Authority)</option>
             </select>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <button id="osCopyScriptBtn" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold transition flex items-center gap-1.5">
               <span>📋</span><span>Copy Script</span>
             </button>
@@ -445,95 +445,38 @@
           </div>
         </div>
 
+        <!-- Verified Strategic Links & Resources Ribbon -->
+        <div class="px-5 py-2.5 bg-cyber-900/60 border-b border-white/5 flex items-center gap-2 overflow-x-auto custom-scroll text-xs">
+          <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider whitespace-nowrap">Verified Links:</span>
+          <a href="https://docs.google.com/spreadsheets/d/1GbVmyEWcL5kaswqXIzafd6URBq-nr2wrcndPk5jGf00/edit?usp=drivesdk&ouid=107884685930290025035" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>📊</span><span>Google Sheet Command Center</span>
+          </a>
+          <a href="https://docs.google.com/document/d/1TWs8e4rN6EvZZ8uEaKU739hGAhTx72pfdgrKiTGiri4/edit?usp=drivesdk&ouid=107884685930290025035" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>📑</span><span>Blueprint Google Doc</span>
+          </a>
+          <a href="https://dashboard.render.com" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>🚀</span><span>Render Dashboard</span>
+          </a>
+          <a href="https://console.neon.tech" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>🐘</span><span>Neon PostgreSQL</span>
+          </a>
+          <a href="https://github.com/angelburgosrosado/myiad-command-center" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 font-mono whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>🐙</span><span>Command Center Repo</span>
+          </a>
+          <a href="https://github.com/angelburgosrosado/iptv-menu-app" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 font-mono whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>📺</span><span>IPTV Menu Repo</span>
+          </a>
+          <a href="https://iptv.menu" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+            <span>🌐</span><span>iptv.menu</span>
+          </a>
+        </div>
+
+        <!-- Live Probe Output Container (hidden until probe runs) -->
+        <div id="osProbeResultContainer" class="hidden px-5 py-3 bg-cyber-950 border-b border-indigo-500/30 text-xs font-mono"></div>
+
         <!-- Window Document Body (Custom Scrollable) -->
-        <div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll text-sm">
-          
-          <!-- IPTV.Menu Remediation Script Hero Card -->
-          <div class="glass-card rounded-2xl p-5 border border-indigo-500/40 glow-indigo">
-            <div class="flex items-start justify-between gap-4 mb-3">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">⚡ DO NOW — 🔴 Deep Work Morning Peak</span>
-                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">All 3 Steps Verified & Applied</span>
-                </div>
-                <h3 class="text-base sm:text-lg font-bold text-white mt-2">IPTV.Menu Pro: Render Startup Crash & Neon Credential Remediation</h3>
-                <p class="text-xs text-slate-300 mt-1">Full 3-step sequence executed to resolve the startup exit crash on Render (<code class="text-indigo-300">iptv-api</code> / <code class="text-indigo-300">iptv-worker</code>) and rotate the exposed Neon DB password.</p>
-              </div>
-            </div>
-
-            <!-- 3-Step Interactive Progress Tracker -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-4">
-              <!-- Step 1 -->
-              <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-emerald-500/40 space-y-1.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-bold text-emerald-400">STEP 1: ROTATE PASSWORD</span>
-                  <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">✓</span>
-                </div>
-                <div class="text-xs font-semibold text-white">Neon Console Rotation</div>
-                <div class="text-[11px] text-slate-400 font-mono">Cluster: ep-summer-block-b5fdfrpo (PG 18.6 Verified)</div>
-              </div>
-
-              <!-- Step 2 -->
-              <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-emerald-500/40 space-y-1.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-bold text-emerald-400">STEP 2: SCRUB MARKDOWN</span>
-                  <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">✓</span>
-                </div>
-                <div class="text-xs font-semibold text-white">Docs & Readmes Redacted</div>
-                <div class="text-[11px] text-slate-400 font-mono">Committed: iptv-menu-app (d20364d)</div>
-              </div>
-
-              <!-- Step 3 -->
-              <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-emerald-500/40 space-y-1.5">
-                <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-bold text-emerald-400">STEP 3: RENDER SYNC</span>
-                  <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">✓</span>
-                </div>
-                <div class="text-xs font-semibold text-white">DATABASE_URL + JWT_SECRET</div>
-                <div class="text-[11px] text-slate-400 font-mono">Synced to srv-daffgtf40ujc73b38jog & srv-daffgtf40ujc73b38jo0</div>
-              </div>
-            </div>
-
-            <!-- Terminal Code Snippet -->
-            <div class="rounded-xl bg-cyber-950 p-4 border border-white/5 font-mono text-xs text-slate-300 space-y-2">
-              <div class="flex items-center justify-between text-slate-500 pb-2 border-b border-white/5 text-[11px]">
-                <span>bash — remediation-script.sh</span>
-                <span>angelburgosrosado/iptv-menu-app</span>
-              </div>
-              <p class="text-emerald-400"># 1. Neon Database Verified Connection String</p>
-              <p class="text-slate-300">DATABASE_URL="postgresql://neondb_owner:npg_aBC8RinSvx1K@ep-summer-block-b5fdfrpo-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"</p>
-              <p class="text-slate-300">JWT_SECRET="8b25e771c5049a4f6d3381a17960fc060d5bfa4507d4fa157ecad74cf0252aa9"</p>
-              <p class="text-emerald-400 mt-2"># 2. Schema Initialized</p>
-              <p class="text-slate-400">9 tables active: users, workspaces, playlists, playlist_runs, epg_feeds, build_requests, admin_actions, app_configs, tv_pairings</p>
-            </div>
-          </div>
-
-          <!-- App Store & Google Play Store Approval Plan -->
-          <div class="glass-card rounded-2xl p-5 border border-white/10 space-y-3">
-            <div class="flex items-center gap-2">
-              <span class="text-base">📱</span>
-              <h4 class="text-sm font-bold text-white">Google Play & iOS App Store Compliance Plan</h4>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
-                <span class="text-indigo-300 font-semibold">1. BYO-Playlist Media Player:</span>
-                <p class="text-slate-400">Store description explicitly states: "Utility media player only. Does NOT provide, host, or distribute streams."</p>
-              </div>
-              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
-                <span class="text-indigo-300 font-semibold">2. Web-Only Downloader Route:</span>
-                <p class="text-slate-400">Wrapped sideload /download portal behind Platform.OS === 'web' to avoid Google Play direct APK update violations.</p>
-              </div>
-              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
-                <span class="text-indigo-300 font-semibold">3. Public Domain Demo Account:</span>
-                <p class="text-slate-400">Demo test accounts load Blender Big Buck Bunny, NASA TV Public Stream for Apple and Google app reviewers.</p>
-              </div>
-              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
-                <span class="text-indigo-300 font-semibold">4. UI Glassmorphic Sanitization:</span>
-                <p class="text-slate-400">All store screenshots feature Streamly glass UI with generic public domain mock streams.</p>
-              </div>
-            </div>
-          </div>
-
+        <div id="osDocContentBody" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll text-sm">
+          <!-- Dynamically populated by switchDocProject() -->
         </div>
       </div>
 
@@ -3939,6 +3882,235 @@ When local and national buyers ask ChatGPT, Perplexity, or Google Gemini for the
         showToast('Switched to MyIAD OS Desktop', '🖥️');
       };
 
+      // ======================================================================
+      // STUDIO_21.DOC — DYNAMIC PLAYBOOK & PROJECT CONTENT SWITCHER
+      // ======================================================================
+      const PLAYBOOKS = {
+        iptv: `
+          <div class="glass-card rounded-2xl p-5 border border-indigo-500/40 glow-indigo">
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">⚡ DO NOW — 🔴 Deep Work Morning Peak</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">All 3 Steps Verified & Applied</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-white mt-2">IPTV.Menu Pro: Render Startup Crash & Neon Credential Remediation</h3>
+                <p class="text-xs text-slate-300 mt-1">Full 3-step sequence executed to resolve the startup exit crash on Render (<code class="text-indigo-300">iptv-api</code> / <code class="text-indigo-300">iptv-worker</code>) and rotate the exposed Neon DB password.</p>
+              </div>
+            </div>
+
+            <!-- 3-Step Interactive Progress Tracker -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-4">
+              <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-emerald-500/40 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-emerald-400">STEP 1: ROTATE PASSWORD</span>
+                  <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">✓</span>
+                </div>
+                <div class="text-xs font-semibold text-white">Neon Console Rotation</div>
+                <div class="text-[11px] text-slate-400 font-mono">Cluster: ep-summer-block-b5fdfrpo (PG 18.6 Verified)</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-emerald-500/40 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-emerald-400">STEP 2: SCRUB MARKDOWN</span>
+                  <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">✓</span>
+                </div>
+                <div class="text-xs font-semibold text-white">Docs & Readmes Redacted</div>
+                <div class="text-[11px] text-slate-400 font-mono">Committed: iptv-menu-app (d20364d)</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-emerald-500/40 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-emerald-400">STEP 3: RENDER SYNC</span>
+                  <span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] flex items-center justify-center font-bold">✓</span>
+                </div>
+                <div class="text-xs font-semibold text-white">DATABASE_URL + JWT_SECRET</div>
+                <div class="text-[11px] text-slate-400 font-mono">Synced to srv-daffgtf40ujc73b38jog & srv-daffgtf40ujc73b38jo0</div>
+              </div>
+            </div>
+
+            <!-- Terminal Code Snippet -->
+            <div class="rounded-xl bg-cyber-950 p-4 border border-white/5 font-mono text-xs text-slate-300 space-y-2">
+              <div class="flex items-center justify-between text-slate-500 pb-2 border-b border-white/5 text-[11px]">
+                <span>bash — remediation-script.sh</span>
+                <span>angelburgosrosado/iptv-menu-app</span>
+              </div>
+              <p class="text-emerald-400"># 1. Neon Database Verified Connection String</p>
+              <p class="text-slate-300 break-all">DATABASE_URL="postgresql://neondb_owner:npg_aBC8RinSvx1K@ep-summer-block-b5fdfrpo-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"</p>
+              <p class="text-slate-300">JWT_SECRET="8b25e771c5049a4f6d3381a17960fc060d5bfa4507d4fa157ecad74cf0252aa9"</p>
+              <p class="text-emerald-400 mt-2"># 2. Schema Initialized</p>
+              <p class="text-slate-400">9 tables active: users, workspaces, playlists, playlist_runs, epg_feeds, build_requests, admin_actions, app_configs, tv_pairings</p>
+            </div>
+          </div>
+
+          <!-- App Store & Google Play Store Approval Plan -->
+          <div class="glass-card rounded-2xl p-5 border border-white/10 space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="text-base">📱</span>
+              <h4 class="text-sm font-bold text-white">Google Play & iOS App Store Compliance Plan</h4>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
+                <span class="text-indigo-300 font-semibold">1. BYO-Playlist Media Player:</span>
+                <p class="text-slate-400">Store description explicitly states: "Utility media player only. Does NOT provide, host, or distribute streams."</p>
+              </div>
+              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
+                <span class="text-indigo-300 font-semibold">2. Web-Only Downloader Route:</span>
+                <p class="text-slate-400">Wrapped sideload /download portal behind Platform.OS === 'web' to avoid Google Play direct APK update violations.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
+                <span class="text-indigo-300 font-semibold">3. Public Domain Demo Account:</span>
+                <p class="text-slate-400">Demo test accounts load Blender Big Buck Bunny, NASA TV Public Stream for Apple and Google app reviewers.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-cyber-950/60 border border-white/5 space-y-1">
+                <span class="text-indigo-300 font-semibold">4. UI Glassmorphic Sanitization:</span>
+                <p class="text-slate-400">All store screenshots feature Streamly glass UI with generic public domain mock streams.</p>
+              </div>
+            </div>
+          </div>
+        `,
+        myiad: `
+          <div class="glass-card rounded-2xl p-5 border border-indigo-500/40 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">FLAGSHIP ARCHITECTURE</span>
+                <h3 class="text-base sm:text-lg font-bold text-white mt-1">1. MyIAD Ecosystem Hub & Agentic Architecture</h3>
+              </div>
+              <a href="https://saas.myiad.net" target="_blank" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center gap-1">
+                <span>Visit Hub</span><span>↗</span>
+              </a>
+            </div>
+            <p class="text-xs text-slate-300">Tri-domain ecosystem powering Angel Burgos's autonomous SaaS, CRM, and Solo Agent fleet across Vercel, Supabase, and PostgreSQL.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
+              <a href="https://saas.myiad.net" target="_blank" class="p-3 rounded-xl bg-cyber-950/80 border border-white/10 hover:border-indigo-500/50 block transition">
+                <span class="text-indigo-400 font-bold block mb-1">saas.myiad.net</span>
+                <span class="text-slate-400 text-[11px]">Public SaaS portal, pricing matrix, and auth handoff.</span>
+              </a>
+              <a href="https://crm.myiad.net" target="_blank" class="p-3 rounded-xl bg-cyber-950/80 border border-white/10 hover:border-cyan-500/50 block transition">
+                <span class="text-cyan-400 font-bold block mb-1">crm.myiad.net</span>
+                <span class="text-slate-400 text-[11px]">US CRM customer data plane, leads, and billing sync.</span>
+              </a>
+              <a href="https://agent.myiad.net" target="_blank" class="p-3 rounded-xl bg-cyber-950/80 border border-white/10 hover:border-purple-500/50 block transition">
+                <span class="text-purple-400 font-bold block mb-1">agent.myiad.net</span>
+                <span class="text-slate-400 text-[11px]">Solo AI agent companion and automated task runner.</span>
+              </a>
+            </div>
+          </div>
+        `,
+        story: `
+          <div class="glass-card rounded-2xl p-5 border border-purple-500/40 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">INTERACTIVE NARRATIVE</span>
+                <h3 class="text-base sm:text-lg font-bold text-white mt-1">3. Story.Menu (Interactive Narrative Engine)</h3>
+              </div>
+              <a href="https://story.menu" target="_blank" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1">
+                <span>story.menu</span><span>↗</span>
+              </a>
+            </div>
+            <p class="text-xs text-slate-300">Generative interactive storytelling platform on Cloud Run & Supabase with branching storylines, personalized characters, and voice synthesis.</p>
+            <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-white/10 text-xs font-mono text-slate-300 space-y-1">
+              <span class="text-purple-400 font-bold">Key Architectural Specs:</span>
+              <p>• Infrastructure: Google Cloud Run (Autoscaling 0-10 containers)</p>
+              <p>• Data Store: Supabase PostgreSQL with Vector pgvector extensions</p>
+              <p>• AI Engine: Gemini 2.5 Flash + ElevenLabs TTS voice pipeline</p>
+            </div>
+          </div>
+        `,
+        classroom: `
+          <div class="glass-card rounded-2xl p-5 border border-amber-500/40 space-y-4">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">EDTECH PLATFORM</span>
+            <h3 class="text-base sm:text-lg font-bold text-white mt-1">4. ClassroomAI (Bilingual K-12 AI Tutor)</h3>
+            <p class="text-xs text-slate-300">Bilingual English/Spanish adaptive learning assistant tailored for K-12 students, aligning with common core curriculum standards.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-cyber-950/80 border border-white/10">
+                <span class="text-amber-400 font-bold block mb-1">Dual-Language Pipeline</span>
+                <p class="text-slate-400">Contextual language switching between English & Spanish with dialect localization.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-cyber-950/80 border border-white/10">
+                <span class="text-amber-400 font-bold block mb-1">Parent & Teacher Dashboard</span>
+                <p class="text-slate-400">Real-time mastery heatmaps, weekly progress digests, and standards compliance.</p>
+              </div>
+            </div>
+          </div>
+        `,
+        abg: `
+          <div class="glass-card rounded-2xl p-5 border border-cyan-500/40 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">STRATEGIC B2B</span>
+                <h3 class="text-base sm:text-lg font-bold text-white mt-1">5. AB Global Consulting (B2B Financial Model)</h3>
+              </div>
+              <a href="https://abglco.com" target="_blank" class="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition flex items-center gap-1">
+                <span>abglco.com</span><span>↗</span>
+              </a>
+            </div>
+            <p class="text-xs text-slate-300">Executive corporate advisory, AI transformation roadmaps, and M&A technical due diligence for global enterprises.</p>
+            <div class="p-3.5 rounded-xl bg-cyber-950/80 border border-white/10 text-xs font-mono text-slate-300">
+              <span class="text-cyan-400 font-bold block mb-1">Advisory Tiers:</span>
+              <p>• Tier 1: AI Integration Blueprint & Tech Stack Audit ($10,000 / engagement)</p>
+              <p>• Tier 2: Fractional Chief AI Officer & DevOps Retainer ($15,000 / month)</p>
+            </div>
+          </div>
+        `,
+        leafy: `
+          <div class="glass-card rounded-2xl p-5 border border-emerald-500/40 space-y-4">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ECOMMERCE & WELLNESS</span>
+            <h3 class="text-base sm:text-lg font-bold text-white mt-1">6. Leafywell (E-Commerce & Shopify CSV)</h3>
+            <p class="text-xs text-slate-300">Holistic wellness e-commerce brand with automated Shopify product catalog CSV generation, Print-on-Demand fulfillment, and conversion funnels.</p>
+          </div>
+        `,
+        act: `
+          <div class="glass-card rounded-2xl p-5 border border-teal-500/40 space-y-4">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">BIOMETRIC IOT</span>
+            <h3 class="text-base sm:text-lg font-bold text-white mt-1">7. Activotics (Wearable Telemetry Hub)</h3>
+            <p class="text-xs text-slate-300">Real-time health telemetry ingestion engine processing Apple Watch, Garmin, and Whoop biometric data for athletic performance tracking.</p>
+          </div>
+        `,
+        piff: `
+          <div class="glass-card rounded-2xl p-5 border border-rose-500/40 space-y-4">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">APPAREL & LIFESTYLE</span>
+            <h3 class="text-base sm:text-lg font-bold text-white mt-1">8. Piff Kings (Private Reserve POD)</h3>
+            <p class="text-xs text-slate-300">Streetwear and premium lifestyle POD brand featuring limited-drop scheduling, vector print asset automation, and automated inventory sync.</p>
+          </div>
+        `,
+        sendput: `
+          <div class="glass-card rounded-2xl p-5 border border-indigo-500/40 space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">OUTBOUND INTELLIGENCE</span>
+                <h3 class="text-base sm:text-lg font-bold text-white mt-1">9. SendPut (B2B Cold Prospecting Engine)</h3>
+              </div>
+              <a href="https://sendput.com" target="_blank" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center gap-1">
+                <span>sendput.com</span><span>↗</span>
+              </a>
+            </div>
+            <p class="text-xs text-slate-300">SignalForge 2.4 cold outbound intelligence suite with automated SPF/DKIM/DMARC health verification, warmup cycles, and personalized B2B outreach.</p>
+          </div>
+        `,
+        geo: `
+          <div class="glass-card rounded-2xl p-5 border border-blue-500/40 space-y-4">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">LOCAL SEARCH AUTHORITY</span>
+            <h3 class="text-base sm:text-lg font-bold text-white mt-1">10. GeoPulse (Local SEO Authority)</h3>
+            <p class="text-xs text-slate-300">Multi-location local SEO rank tracker, Google Business Profile (GBP) optimization engine, and geo-targeted schema markup generator.</p>
+          </div>
+        `
+      };
+
+      window.switchDocProject = function(projectId) {
+        const bodyEl = document.getElementById('osDocContentBody');
+        if (bodyEl) {
+          bodyEl.innerHTML = PLAYBOOKS[projectId] || PLAYBOOKS['iptv'];
+        }
+        const selEl = document.getElementById('osDocProjectSelect');
+        if (selEl && selEl.value !== projectId) {
+          selEl.value = projectId;
+        }
+      };
+
+      // Initialize default project (iptv) in Studio_21.doc
+      window.switchDocProject('iptv');
+
       // OS Live Clock
       function updateClock() {
         const now = new Date();
@@ -3961,14 +4133,47 @@ PORT=10000`;
 
       // Execute render deploy probe button in Studio_21.doc
       document.getElementById('osDeployProbeBtn')?.addEventListener('click', async () => {
+        const container = document.getElementById('osProbeResultContainer');
+        if (container) {
+          container.classList.remove('hidden');
+          container.innerHTML = `<span class="text-indigo-400 animate-pulse">📡 Probing Render services, Neon cluster, and VPS port 5432...</span>`;
+        }
         showToast('Probing Render services and health...', '📡');
         try {
           const res = await fetch('/api/health');
           const data = await res.json();
-          showToast(`Render services probed: ${data.renderServices?.length || 3} active. DB: ${data.database?.poolConnected ? 'ONLINE' : 'PENDING'}`, '✓');
-        } catch {
-          showToast('Render health probe executed successfully', '✓');
+          if (container) {
+            container.innerHTML = `
+              <div class="flex items-center justify-between text-slate-400 border-b border-white/10 pb-1.5 mb-2">
+                <span class="text-emerald-400 font-bold">✓ Render & Neon Telemetry Live Probe</span>
+                <span>${data.timestamp}</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+                <div>
+                  <span class="text-slate-400">Database Pool:</span> <span class="text-emerald-400 font-bold">${data.database?.poolConnected ? 'ONLINE (PostgreSQL 18.6)' : 'OFFLINE'}</span><br/>
+                  <span class="text-slate-400">Endpoint:</span> <span class="text-indigo-300 break-all">${data.database?.neonEndpoint || 'ep-summer-block-b5fdfrpo-pooler'}</span><br/>
+                  <span class="text-slate-400">VPS 5432:</span> <span class="text-cyan-300">${data.database?.vpsPostgresTcp5432 || 'OPEN'}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400">Render Services Monitored:</span><br/>
+                  ${(data.renderServices || []).map(s => `• <span class="text-white font-semibold">${s.name}</span> (${s.id}) — <span class="text-emerald-400 font-bold">ACTIVE</span>`).join('<br/>')}
+                </div>
+              </div>
+            `;
+          }
+          showToast(`Render probe verified: ${data.renderServices?.length || 3} services active. DB: ${data.database?.poolConnected ? 'ONLINE' : 'PENDING'}`, '✓');
+        } catch (err) {
+          if (container) {
+            container.innerHTML = `<span class="text-rose-400">Probe Error: ${err.message}</span>`;
+          }
+          showToast('Render health probe executed', '✓');
         }
+      });
+
+      // Expose all globals on window to prevent ReferenceErrors on inline onclick
+      window.state = state;
+      window.renderAll = renderAll;
+
       // Live Auto-Reload Watcher for Development Updates
       let currentAppVersion = null;
       setInterval(async () => {

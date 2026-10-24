@@ -112,7 +112,7 @@ export class AutonomousEngine {
   }
 
   private seedInitialMemory() {
-    const goalId = 'goal-seed-001';
+    const goalId = '00000000-0000-4000-8000-000000000001';
     const now = new Date().toISOString();
 
     this.memoryGoals.push({
@@ -443,8 +443,12 @@ export class AutonomousEngine {
 
   // --- TASK METHODS ---
   async getTasks(goalId?: string): Promise<AutonomousTask[]> {
+    const isUuid = (val: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
     if (this.pool) {
       try {
+        if (goalId && !isUuid(goalId)) {
+          return this.memoryTasks.filter((t) => t.goal_id === goalId);
+        }
         const query = goalId
           ? `SELECT * FROM ${SCHEMA}.command_tasks WHERE goal_id = $1 ORDER BY updated_at DESC;`
           : `SELECT * FROM ${SCHEMA}.command_tasks ORDER BY updated_at DESC;`;
