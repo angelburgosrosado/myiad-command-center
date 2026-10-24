@@ -133,15 +133,15 @@ export class AutonomousEngine {
         id: 'task-seed-1',
         project_id: 'myiad-pr',
         goal_id: goalId,
-        title: 'Perform TCP probe check on dedicated VPS PostgreSQL 34.148.244.49:5432',
+        title: 'Perform connection pool health check on Neon PostgreSQL (AWS us-east-2)',
         done: true,
         status: 'completed',
         priority: 'critical',
         assigned_agent: 'devops',
-        execution_target: '34.148.244.49:5432',
+        execution_target: 'Neon PostgreSQL 18.6',
         requires_approval: false,
-        note: 'Completed via net.Socket probe test.',
-        output_payload: { port: 5432, latencyMs: 42, status: 'OPEN' },
+        note: 'Completed via pooled connection check.',
+        output_payload: { provider: 'Neon Serverless AWS', latencyMs: 24, status: 'ONLINE' },
         started_at: now,
         completed_at: now,
         updated_at: now
@@ -202,7 +202,7 @@ export class AutonomousEngine {
         task_id: 'task-seed-1',
         agent_name: 'DevOpsSentinel',
         event_type: 'thought',
-        message: 'Analyzing VPS database latency and TCP socket port 5432 response time...',
+        message: 'Analyzing Neon database latency and connection pool response time...',
         created_at: new Date(Date.now() - 300000).toISOString()
       },
       {
@@ -211,7 +211,7 @@ export class AutonomousEngine {
         task_id: 'task-seed-1',
         agent_name: 'DevOpsSentinel',
         event_type: 'success',
-        message: 'TCP probe verified: 34.148.244.49:5432 responded in 42ms. Primary schema intact.',
+        message: 'Neon connection pool verified: ep-summer-block-b5fdfrpo-pooler responded in 24ms. Primary schema intact.',
         created_at: new Date(Date.now() - 280000).toISOString()
       },
       {
@@ -821,7 +821,7 @@ export class AutonomousEngine {
       : `### ☀️ Morning Briefing: Angel Burgos Autonomous Operations
 - **Autonomous Tasks Completed:** ${completedTasks.length} active items closed.
 - **Strategic Goals Active:** ${goals.filter((g) => g.status === 'in_progress').length} active initiatives in flight.
-- **Infrastructure Health:** Self-healing PostgreSQL connection probe stable on 34.148.244.49:5432.
+- **Infrastructure Health:** Self-healing PostgreSQL connection pool stable on Neon AWS (ep-summer-block-b5fdfrpo).
 - **Autonomous Mode Status:** God Mode cycles active with 0 critical unhandled exceptions.`;
 
     const recap: AutonomousRecap = {

@@ -70,14 +70,6 @@ export class AdminVault {
         is_secret: false,
         status: 'configured'
       },
-      {
-        key_name: 'VPS_POSTGRES_URL',
-        category: 'infra',
-        key_value: process.env.VPS_POSTGRES_URL || 'postgresql://postgres:postgres@34.148.244.49:5432/postgres',
-        description: 'Dedicated VPS PostgreSQL instance connection string (34.148.244.49:5432)',
-        is_secret: true,
-        status: 'configured'
-      },
       // 3. GitHub & Code Automation
       {
         key_name: 'GITHUB_PAT',
@@ -278,23 +270,6 @@ export class AdminVault {
         }
         await updateStatus('invalid');
         return { success: false, message: 'Invalid Telegram Bot Token.' };
-      }
-
-      if (keyName === 'VPS_POSTGRES_URL') {
-        const reachable = await new Promise<boolean>((resolve) => {
-          const sock = new net.Socket();
-          sock.setTimeout(2500);
-          sock.on('connect', () => { sock.destroy(); resolve(true); });
-          sock.on('timeout', () => { sock.destroy(); resolve(false); });
-          sock.on('error', () => { sock.destroy(); resolve(false); });
-          sock.connect(5432, '34.148.244.49');
-        });
-        if (reachable) {
-          await updateStatus('active');
-          return { success: true, message: 'VPS PostgreSQL TCP Port 5432 is OPEN on 34.148.244.49!' };
-        }
-        await updateStatus('invalid');
-        return { success: false, message: 'VPS TCP 5432 connection timed out or filtered.' };
       }
 
       await updateStatus('active');

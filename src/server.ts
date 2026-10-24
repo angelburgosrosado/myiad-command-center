@@ -1,5 +1,5 @@
 /**
- * server.ts — Full-Stack Command Center Backend (Render + Neon + VPS 34.148.244.49:5432)
+ * server.ts — Full-Stack Command Center Backend (Render + Neon AWS)
  * Features: Polsia-Style Autonomous Operator Engine + Administrative Secrets Vault & Auto-Healing
  */
 import express from 'express';
@@ -34,7 +34,7 @@ function testTcpPort(host: string, port: number, timeoutMs = 3000): Promise<bool
 }
 
 async function initDbPool() {
-  const connStr = (process.env.DATABASE_URL || process.env.VPS_POSTGRES_URL || '').replace(/['"]/g, '').trim();
+  const connStr = (process.env.DATABASE_URL || '').replace(/['"]/g, '').trim();
   if (!connStr || connStr.includes('placeholder')) {
     console.warn('[Self-Healing DB] No active DATABASE_URL provided; operating in stateful memory + localStorage sync mode.');
     return;
@@ -67,7 +67,7 @@ const MONITORED_ENDPOINTS = [
   { name: 'MyIAD US CRM', url: 'https://crm.myiad.net', provider: 'Vercel / Supabase' },
   { name: 'MyIAD Solo Agent', url: 'https://agent.myiad.net', provider: 'Vercel / GitHub' },
   { name: 'IPTV.Menu Web', url: 'https://iptv.menu', provider: 'Render / Neon' },
-  { name: 'Story.Menu App', url: 'https://story.menu', provider: 'Cloud Run / Supabase' },
+  { name: 'Story.Menu App', url: 'https://story.menu', provider: 'Render / Supabase' },
   { name: 'AB Global Consulting', url: 'https://abglco.com', provider: 'Production Web' },
   { name: 'SendPut (SignalForge 2.4)', url: 'https://sendput.com', provider: 'Production Web' }
 ];
@@ -80,7 +80,6 @@ app.get('/api/version', (_req, res) => {
 });
 
 app.get('/api/health', async (_req, res) => {
-  const vpsReachable = await testTcpPort('34.148.244.49', 5432, 2000);
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -88,7 +87,7 @@ app.get('/api/health', async (_req, res) => {
       poolConnected: dbOnline,
       isolatedSchema: SCHEMA_NAME,
       neonEndpoint: (process.env.DATABASE_URL || '').split('@')[1]?.split('/')[0] || 'ep-summer-block-b5fdfrpo-pooler.c-7.us-east-2.aws.neon.tech',
-      vpsPostgresTcp5432: vpsReachable ? 'OPEN (34.148.244.49:5432)' : 'FILTERED / OFFLINE'
+      provider: 'Neon Serverless PostgreSQL (AWS)'
     },
     renderServices: [
       { id: 'srv-daffgtf40ujc73b38jog', name: 'iptv-api', type: 'web' },

@@ -487,9 +487,9 @@
           <span class="font-semibold">Neon: ep-summer-block</span>
         </div>
 
-        <!-- VPS 5432 Status -->
-        <div class="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-cyan-300 backdrop-blur-md" title="VPS 34.148.244.49:5432">
-          <span>🛡️ VPS 5432</span>
+        <!-- Render Cloud Fleet Status -->
+        <div class="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-cyan-300 backdrop-blur-md" title="Render Ohio Cloud Fleet (Active)" onclick="openWindow('win-fleet')">
+          <span>🚀 Render Ohio</span>
         </div>
 
         <!-- Wi-Fi / Bandwidth -->
@@ -821,7 +821,7 @@
           <div class="p-4 rounded-xl bg-black/60 border border-white/10 font-mono text-[11px] space-y-2">
             <span class="text-indigo-300 font-bold block mb-1">Live Autonomous Thought Stream:</span>
             <p class="text-slate-400">[08:00 AM] Scheduled Morning Briefing generated. 7 ecosystem endpoints surveyed.</p>
-            <p class="text-slate-400">[12:15 PM] TCP 5432 probe verified. VPS PostgreSQL 34.148.244.49 responded in 42ms.</p>
+            <p class="text-slate-400">[12:15 PM] Neon pool probe verified. ep-summer-block cluster responded in 24ms.</p>
             <p class="text-emerald-400 font-semibold">[03:20 PM] Neon Database cluster ep-summer-block-b5fdfrpo synced. 19 schemas verified.</p>
           </div>
         </div>
@@ -859,10 +859,10 @@
           </div>
           <div class="p-3 rounded-xl bg-cyber-950/80 border border-white/10 flex items-center justify-between">
             <div>
-              <span class="text-white font-bold block">VPS_POSTGRES_URL</span>
-              <span class="text-slate-400 text-[11px] font-mono">34.148.244.49:5432 (vault_app_angelburgosrosado)</span>
+              <span class="text-white font-bold block">GEMINI_API_KEY (Google AI Studio)</span>
+              <span class="text-slate-400 text-[11px] font-mono">AIzaSy********************************</span>
             </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">STANDBY</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">ACTIVE</span>
           </div>
           <div class="flex justify-end pt-2">
             <button onclick="switchToDashboardView(); state.currentTab = 'admin'; renderAll();" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition">
@@ -1087,7 +1087,7 @@
               <span class="text-slate-600">•</span>
               <span>Neon ep-summer-block-b5fdfrpo</span>
               <span class="text-slate-600">•</span>
-              <span>VPS 34.148.244.49:5432 (OK)</span>
+              <span>Neon AWS (18.6 OK)</span>
             </p>
           </div>
         </div>
@@ -1197,7 +1197,7 @@
           </div>
           <div class="text-xl sm:text-2xl font-extrabold text-cyan-300 tracking-tight">7 of 7 Reachable</div>
           <div class="text-[11px] text-slate-300 mt-2 font-mono">saas • crm • iptv • story • sendput</div>
-          <div class="text-[10px] text-slate-500 mt-0.5">VPS 34.148.244.49:5432 verified</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Neon AWS us-east-2 verified</div>
         </div>
 
         <!-- Metric 4: Human Gate Approvals -->
@@ -1276,9 +1276,9 @@
               <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
               <span>SendPut B2B Proposal Audit</span>
             </button>
-            <button class="polsia-preset-btn text-[11px] bg-white/5 hover:bg-white/10 hover:border-indigo-500/40 text-slate-300 border border-white/10 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5" data-preset="Test VPS PostgreSQL 34.148.244.49 socket and run self-healing pool sync">
+            <button class="polsia-preset-btn text-[11px] bg-white/5 hover:bg-white/10 hover:border-indigo-500/40 text-slate-300 border border-white/10 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5" data-preset="Test Neon PostgreSQL connection pool and verify schema health">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <span>VPS PostgreSQL 5432 TCP Probe</span>
+              <span>Neon PostgreSQL Connection Pool Test</span>
             </button>
           </div>
         </div>
@@ -1439,7 +1439,7 @@
           <div>
             <div class="flex items-center gap-2 flex-wrap">
               <h2 class="text-base sm:text-lg font-bold text-white">🌐 Unified Cloud Infrastructure & DevOps Control Plane</h2>
-              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Render • Neon • VPS 34.148.244.49 • Cloud Run • Supabase • Vercel</span>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Render • Neon (AWS) • Supabase • Vercel • Cloudflare</span>
             </div>
             <p class="text-xs text-slate-400 mt-1">Direct operational map of your live cloud services, databases, and endpoints—with real-time browser HTTP reachability & latency probing across all 7 live domains.</p>
           </div>
@@ -1459,7 +1459,7 @@
           <div class="glass-card rounded-2xl p-4 space-y-3 border-t-2 border-t-indigo-500">
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-bold text-white flex items-center gap-2"><span>⚙️</span><span>Render Cloud Cluster</span></h3>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Receipt #2941-7579 Paid</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Managed Cloud</span>
             </div>
             <div class="space-y-2 text-xs">
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
@@ -1467,77 +1467,64 @@
                   <div class="font-bold text-white">iptv-api (Web Service)</div>
                   <div class="text-[11px] text-slate-400 font-mono">srv-daffgtf40ujc73b38jog</div>
                 </div>
-                <a href="https://dashboard.render.com/web/srv-daffgtf40ujc73b38jog" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold text-[11px]">Fix Deploy ↗</a>
+                <a href="https://dashboard.render.com/web/srv-daffgtf40ujc73b38jog" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold text-[11px]">Active ↗</a>
               </div>
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
                 <div>
                   <div class="font-bold text-white">iptv-worker (Background Worker)</div>
                   <div class="text-[11px] text-slate-400 font-mono">srv-daffgtf40ujc73b38jo0</div>
                 </div>
-                <a href="https://dashboard.render.com/worker/srv-daffgtf40ujc73b38jo0" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold text-[11px]">Logs (Exit 1) ↗</a>
+                <a href="https://dashboard.render.com/worker/srv-daffgtf40ujc73b38jo0" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold text-[11px]">Active ↗</a>
               </div>
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
                 <div>
-                  <div class="font-bold text-white">iptv-menu-app (Worker/App)</div>
+                  <div class="font-bold text-white">myiad-command-center (Control Plane)</div>
                   <div class="text-[11px] text-slate-400 font-mono">srv-daebvt9t0dsc739kcfh0</div>
                 </div>
-                <a href="https://dashboard.render.com/worker/srv-daebvt9t0dsc739kcfh0" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold text-[11px]">Inspect ↗</a>
+                <a href="https://dashboard.render.com" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold text-[11px]">Dashboard ↗</a>
               </div>
             </div>
           </div>
 
-          <!-- Database & VPS Cluster -->
+          <!-- Database & Storage Cluster -->
           <div class="glass-card rounded-2xl p-4 space-y-3 border-t-2 border-t-emerald-500">
             <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2"><span>🗄️</span><span>Neon & VPS PostgreSQL Cluster</span></h3>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/20 text-indigo-300">Multi-Tenant Ready</span>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2"><span>🗄️</span><span>Neon PostgreSQL 18.6 (AWS)</span></h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Active Pool</span>
             </div>
             <div class="space-y-2 text-xs">
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
                 <div class="flex items-center justify-between">
-                  <span class="font-bold text-white">Neon Serverless Postgres</span>
-                  <a href="https://console.neon.tech" target="_blank" rel="noopener" class="text-indigo-400 underline text-[11px]">Rotate Key ↗</a>
+                  <span class="font-bold text-white">Neon Serverless: ep-summer-block</span>
+                  <a href="https://console.neon.tech" target="_blank" rel="noopener" class="text-indigo-400 underline text-[11px]">Console ↗</a>
                 </div>
-                <div class="text-[11px] text-slate-400 font-mono mt-0.5">Org: org-jolly-firefly-39091146</div>
-                <div class="text-[11px] text-slate-400 font-mono">Proj: rapid-mud-93988182 • ep-winter-poetry-ae51hoth</div>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-white">Dedicated Postgres VPS / Cloud SQL</span>
-                  <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">34.148.244.49:5432</span>
-                </div>
-                <div class="text-[11px] text-slate-400 font-mono mt-0.5">Schema: vault_app_angelburgosrosado</div>
-                <div class="text-[11px] text-slate-400">Self-healing TCP socket probe + automatic sandbox fallback</div>
+                <div class="text-[11px] text-slate-400 font-mono mt-0.5">Region: AWS us-east-2 (Ohio)</div>
+                <div class="text-[11px] text-slate-400 font-mono">Schema: vault_app_angelburgosrosado (19 tables)</div>
               </div>
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
                 <div>
                   <div class="font-bold text-white">Supabase: Story-Menu & InsuranceCRM</div>
-                  <div class="text-[11px] text-slate-400 font-mono">yiqqotvexwwwxmrpeqwr</div>
+                  <div class="text-[11px] text-slate-400 font-mono">yiqqotvexwwwxmrpeqwr (AWS)</div>
                 </div>
                 <a href="https://supabase.com/dashboard" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold text-[11px]">SQL Editor ↗</a>
               </div>
             </div>
           </div>
 
-          <!-- Cloud Run, Vercel & Telecom Cluster -->
+          <!-- Frontend & Edge Cluster -->
           <div class="glass-card rounded-2xl p-4 space-y-3 border-t-2 border-t-amber-500">
             <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2"><span>☁️</span><span>Cloud Run, Vercel & Twilio</span></h3>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">Action Items</span>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2"><span>☁️</span><span>Vercel & Edge Telecom</span></h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300">Operational</span>
             </div>
             <div class="space-y-2 text-xs">
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
                 <div>
-                  <div class="font-bold text-white">Google Cloud Run (myiad-comic-app)</div>
-                  <div class="text-[11px] text-slate-400 font-mono">Billing: 01783B-2086B0-767989</div>
+                  <div class="font-bold text-white">Vercel: Intelliapps by MyIAD</div>
+                  <div class="text-[11px] text-slate-400 font-mono">crm.myiad.net • saas.myiad.net</div>
                 </div>
-                <a href="https://console.cloud.google.com/billing" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 font-semibold text-[11px]">GCP ↗</a>
+                <a href="https://vercel.com/dashboard" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 font-semibold text-[11px]">Vercel ↗</a>
               </div>
-              <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <div class="font-bold text-white">Vercel Team: Intelliapps by MyIAD</div>
-                  <div class="text-[11px] text-slate-400 font-mono">Account: angelburgosrosado-4931</div>
-                </div>
                 <a href="https://vercel.com/dashboard" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 font-semibold text-[11px]">Vercel ↗</a>
               </div>
               <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
@@ -2030,7 +2017,7 @@
             { id: 'story-1', title: 'Fix live boot crash on www.story.menu (TypeError: Failed to fetch at QB.load / _initDecoder in index-Bcj70pEY.js)', demand: 'deep', done: false, note: 'Verified via live browse: decoder/WASM asset fails to fetch on initial load' },
             { id: 'story-2', title: 'Execute Supabase Row-Level Security (RLS) SQL migration on project yiqqotvexwwwxmrpeqwr', demand: 'steady', done: false, note: 'Fixes rls_disabled_in_public & sensitive_columns_exposed alerts' },
             { id: 'story-3', title: 'Add Vocabulary Builder & Reading Incentive Loop (interactive Word Vault, tap-to-define, age/Lexile level toggle, publish badge)', demand: 'deep', done: false, note: 'Core differentiator for kids & adults literacy goal' },
-            { id: 'story-4', title: 'Update GCP billing account (01783B-2086B0-767989) & replace default AI Studio README with launch docs', demand: 'low', done: false, note: 'README template ready in Agent Studio' }
+            { id: 'story-4', title: 'Deploy Story.Menu Web Service to Render with Supabase backend and launch docs', demand: 'low', done: false, note: 'README template ready in Agent Studio' }
           ]
         },
         {
@@ -2045,7 +2032,7 @@
             { label: 'Upstream: THU-MAIC/OpenMAIC', url: 'https://github.com/THU-MAIC/OpenMAIC' }
           ],
           tasks: [
-            { id: 'class-1', title: 'Deploy angelburgosrosado/OpenMAIC locally/Cloud Run with pnpm and wire Gemini 2.5 Flash API keys', demand: 'steady', done: false, note: 'Base multi-agent slide/whiteboard/quiz engine' },
+            { id: 'class-1', title: 'Deploy angelburgosrosado/OpenMAIC to Render Web Service with pnpm and wire Gemini 2.5 Flash API keys', demand: 'steady', done: false, note: 'Base multi-agent slide/whiteboard/quiz engine' },
             { id: 'class-2', title: 'Configure "Snap & Solve Together" intake flow: students upload any math/science/reading homework problem', demand: 'deep', done: false, note: 'Replaces generic lecture mode with on-demand homework problem solving' },
             { id: 'class-3', title: 'Configure Socratic Multi-Agent Roles (Coach Agent, Visual Whiteboard Agent, Peer Study Buddy) with no-spoiler guardrails', demand: 'deep', done: false, note: 'Guides students step-by-step instead of dumping final answers' },
             { id: 'class-4', title: 'Add Student Incentive & Mastery XP System (problem-solving streaks, subject badges, parent/teacher progress summary)', demand: 'steady', done: false, note: 'Spec ready in Agent Studio' }

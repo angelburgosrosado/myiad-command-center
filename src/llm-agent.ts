@@ -526,8 +526,9 @@ Use your tools step-by-step. Inspect real output before concluding. When finishe
     let payload: any = {};
 
     if (t.includes('probe') || t.includes('tcp') || t.includes('endpoint')) {
-      const toolRes = await this.executeTool('probe_tcp_socket', { host: '34.148.244.49', port: 5432 });
-      payload = { probe: toolRes, target: '34.148.244.49:5432' };
+      const neonHost = (process.env.DATABASE_URL || '').split('@')[1]?.split('/')[0] || 'ep-summer-block-b5fdfrpo-pooler.c-7.us-east-2.aws.neon.tech';
+      const toolRes = await this.executeTool('probe_tcp_socket', { host: neonHost.split(':')[0], port: 5432 });
+      payload = { probe: toolRes, target: neonHost };
     } else {
       payload = {
         action: 'baseline_execution',
@@ -557,7 +558,7 @@ Use your tools step-by-step. Inspect real output before concluding. When finishe
       return `### ☀️ Morning Briefing: Angel Burgos Autonomous Operations
 - **Autonomous Tasks Completed:** ${data.tasksCompleted} active items closed.
 - **Strategic Goals Active:** ${data.activeGoals} active initiatives in flight.
-- **Infrastructure Health:** Self-healing PostgreSQL connection probe stable on 34.148.244.49:5432 (${data.healthyServices}/${data.totalServices} services operational).
+- **Infrastructure Health:** Self-healing PostgreSQL connection pool stable on Neon AWS (${data.healthyServices}/${data.totalServices} services operational).
 - **Autonomous Mode Status:** God Mode cycles active with 0 critical unhandled exceptions.`;
     }
 
@@ -602,7 +603,7 @@ Guidelines:
     return `### ☀️ Morning Briefing: Angel Burgos Autonomous Operations
 - **Autonomous Tasks Completed:** ${data.tasksCompleted} active items closed.
 - **Strategic Goals Active:** ${data.activeGoals} active initiatives in flight.
-- **Infrastructure Health:** Self-healing PostgreSQL connection probe stable on 34.148.244.49:5432 (${data.healthyServices}/${data.totalServices} services operational).
+- **Infrastructure Health:** Self-healing PostgreSQL connection pool stable on Neon AWS (${data.healthyServices}/${data.totalServices} services operational).
 - **Autonomous Mode Status:** God Mode cycles active with 0 critical unhandled exceptions.`;
   }
 }

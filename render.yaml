@@ -17,9 +17,7 @@ services:
       - key: PORT
         value: 10000
       - key: DATABASE_URL
-        sync: false # Connect to Neon (ep-winter-poetry-ae51hoth) or VPS Postgres (34.148.244.49:5432)
-      - key: VPS_POSTGRES_URL
-        sync: false # Optional secondary pool for 34.148.244.49:5432 (vault_app_angelburgosrosado)
+        sync: false # Connect to Neon PostgreSQL (ep-summer-block-b5fdfrpo-pooler)
       - key: GEMINI_API_KEY
         sync: false
       - key: RENDER_API_KEY
@@ -46,6 +44,4 @@ services:
       - key: NODE_VERSION
         value: 20
       - key: DATABASE_URL
-        sync: false
-      - key: VPS_POSTGRES_URL
         sync: false

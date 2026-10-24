@@ -1,4 +1,4 @@
-# Dockerfile — Multi-Target Container for Render, Google Cloud Run (myiad-comic-app cluster), or VPS (34.148.244.49)
+# Dockerfile — Production Container for Render & Standalone Node 20 Environments
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
