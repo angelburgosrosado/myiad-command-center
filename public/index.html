@@ -724,6 +724,47 @@
         <!-- Live Probe Output Container (hidden until probe runs) -->
         <div id="osProbeResultContainer" class="hidden px-5 py-3 bg-cyber-950 border-b border-indigo-500/30 text-xs font-mono"></div>
 
+        <!-- 1-CLICK SELF-HEALING & REMEDIATION OPERATIONS HUB -->
+        <div class="px-5 py-3 bg-cyber-950/95 border-b border-white/10 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <span>⚡</span><span>Autonomous 1-Click Self-Healing & Remediation Hub</span>
+              </span>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">Render Ohio + Neon AWS 18.6</span>
+          </div>
+
+          <!-- Quick Action Remediation Buttons -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button onclick="window.runQuickRemediation('sync_and_deploy_iptv')" class="px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-600/30 to-teal-600/20 hover:from-emerald-600/50 hover:to-teal-600/40 text-emerald-300 border border-emerald-500/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm hover:scale-[1.02]">
+              <span>🚀</span><span>Sync & Deploy IPTV</span>
+            </button>
+            <button onclick="window.runQuickRemediation('restart_render_services')" class="px-3 py-2 rounded-xl bg-gradient-to-r from-indigo-600/30 to-purple-600/20 hover:from-indigo-600/50 hover:to-purple-600/40 text-indigo-300 border border-indigo-500/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm hover:scale-[1.02]">
+              <span>🔄</span><span>Restart Services</span>
+            </button>
+            <button onclick="window.runQuickRemediation('test_neon_pool')" class="px-3 py-2 rounded-xl bg-gradient-to-r from-cyan-600/30 to-blue-600/20 hover:from-cyan-600/50 hover:to-blue-600/40 text-cyan-300 border border-cyan-500/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm hover:scale-[1.02]">
+              <span>🐘</span><span>Test Neon Pool</span>
+            </button>
+            <button onclick="window.runQuickRemediation('run_polsia_cycle')" class="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-600/30 to-orange-600/20 hover:from-amber-600/50 hover:to-orange-600/40 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm hover:scale-[1.02]">
+              <span>🤖</span><span>Run Polsia Cycle</span>
+            </button>
+          </div>
+
+          <!-- Pending Approval Remediation Tasks Stream (If Any Require Approval) -->
+          <div id="osRemediationTasksContainer" class="hidden rounded-xl bg-black/60 border border-amber-500/30 p-3 space-y-2"></div>
+
+          <!-- Interactive Live Remediation Output Terminal Drawer -->
+          <div id="osRemediationConsoleDrawer" class="hidden rounded-xl bg-black/90 border border-emerald-500/40 p-3 font-mono text-[11px] text-slate-300 space-y-1.5 max-h-48 overflow-y-auto custom-scroll shadow-inner">
+            <div class="flex items-center justify-between text-slate-500 pb-1 border-b border-white/5 text-[10px]">
+              <span class="text-emerald-400 font-bold">⚡ SELF-HEALING EXECUTION LOG</span>
+              <button onclick="document.getElementById('osRemediationConsoleDrawer').classList.add('hidden')" class="hover:text-white px-1.5 py-0.5 rounded bg-white/10">✕ Close</button>
+            </div>
+            <div id="osRemediationConsoleContent"></div>
+          </div>
+        </div>
+
         <!-- Window Document Body (Custom Scrollable) -->
         <div id="osDocContentBody" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll text-sm">
           <!-- Dynamically populated by switchDocProject() -->
@@ -4963,7 +5004,7 @@ PORT=10000`;
         const container = document.getElementById('osProbeResultContainer');
         if (container) {
           container.classList.remove('hidden');
-          container.innerHTML = `<span class="text-indigo-400 animate-pulse">📡 Probing Render services, Neon cluster, and VPS port 5432...</span>`;
+          container.innerHTML = `<span class="text-indigo-400 animate-pulse">📡 Probing Render services and Neon AWS cluster...</span>`;
         }
         showToast('Probing Render services and health...', '📡');
         try {
@@ -4972,14 +5013,14 @@ PORT=10000`;
           if (container) {
             container.innerHTML = `
               <div class="flex items-center justify-between text-slate-400 border-b border-white/10 pb-1.5 mb-2">
-                <span class="text-emerald-400 font-bold">✓ Render & Neon Telemetry Live Probe</span>
+                <span class="text-emerald-400 font-bold">✓ Render & Neon AWS Live Telemetry Probe</span>
                 <span>${data.timestamp}</span>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
                 <div>
                   <span class="text-slate-400">Database Pool:</span> <span class="text-emerald-400 font-bold">${data.database?.poolConnected ? 'ONLINE (PostgreSQL 18.6)' : 'OFFLINE'}</span><br/>
                   <span class="text-slate-400">Endpoint:</span> <span class="text-indigo-300 break-all">${data.database?.neonEndpoint || 'ep-summer-block-b5fdfrpo-pooler'}</span><br/>
-                  <span class="text-slate-400">VPS 5432:</span> <span class="text-cyan-300">${data.database?.vpsPostgresTcp5432 || 'OPEN'}</span>
+                  <span class="text-slate-400">Region:</span> <span class="text-emerald-300 font-semibold">AWS us-east-2 (Ohio)</span>
                 </div>
                 <div>
                   <span class="text-slate-400">Render Services Monitored:</span><br/>
@@ -4997,9 +5038,150 @@ PORT=10000`;
         }
       });
 
+      // ======================================================================
+      // 1-CLICK AUTONOMOUS SELF-HEALING & REMEDIATION ENGINE
+      // ======================================================================
+      window.runQuickRemediation = async function(actionType) {
+        const drawer = document.getElementById('osRemediationConsoleDrawer');
+        const content = document.getElementById('osRemediationConsoleContent');
+        if (drawer) drawer.classList.remove('hidden');
+        if (content) {
+          content.innerHTML = `
+            <div class="text-indigo-400 animate-pulse flex items-center gap-2 py-1">
+              <span class="inline-block animate-spin">⚙️</span>
+              <span>Executing 1-Click Self-Healing action [${actionType}] across Render & Neon...</span>
+            </div>
+          `;
+        }
+        showToast(`Triggering 1-Click Self-Healing: ${actionType}...`, '⚡');
+
+        try {
+          const res = await fetch('/api/admin/actions/quick-remediate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action_type: actionType })
+          });
+          const data = await res.json();
+
+          if (content) {
+            if (data.success) {
+              let detailLines = '';
+              if (data.details && Array.isArray(data.details)) {
+                detailLines = data.details.map(d => `<div class="text-slate-400 pl-3 font-mono">• Service ${d.service_id || 'Render'}: <span class="text-emerald-300">${d.status || d.envVarCount ? 'Synced & Deployed' : 'Updated'}</span></div>`).join('');
+              } else if (data.messages && Array.isArray(data.messages)) {
+                detailLines = data.messages.map(m => `<div class="text-slate-400 pl-3 font-mono">• ${m}</div>`).join('');
+              }
+
+              content.innerHTML = `
+                <div class="text-emerald-400 font-bold flex items-center gap-1.5">
+                  <span>✓</span><span>Self-Healing Action Succeeded: ${actionType}</span>
+                </div>
+                <div class="text-slate-200 mt-1">${data.message || 'Execution finished cleanly.'}</div>
+                ${detailLines}
+                <div class="text-slate-500 text-[10px] mt-2">Timestamp: ${data.timestamp || new Date().toISOString()} | Targets: Render Ohio & Neon AWS</div>
+              `;
+              showToast(`✓ Remediation complete: ${data.message || 'Success'}`, '✓');
+            } else {
+              content.innerHTML = `
+                <div class="text-rose-400 font-bold flex items-center gap-1.5">
+                  <span>✕</span><span>Remediation Warning / Action Failed:</span>
+                </div>
+                <div class="text-rose-300 mt-1">${data.message || data.error || 'Action failed.'}</div>
+                <div class="text-slate-400 text-[10px] mt-1">Check that RENDER_API_KEY and DATABASE_URL are set in the Secrets Vault.</div>
+              `;
+              showToast(`Remediation issue: ${data.message || 'Error'}`, '⚠️');
+            }
+          }
+          window.loadPendingRemediationTasks();
+        } catch (err) {
+          if (content) {
+            content.innerHTML = `<div class="text-rose-400 font-bold">Execution Error: ${err.message}</div>`;
+          }
+          showToast(`Remediation request failed: ${err.message}`, '❌');
+        }
+      };
+
+      // Load & Render Tasks requiring approval inside Studio 21
+      window.loadPendingRemediationTasks = async function() {
+        const container = document.getElementById('osRemediationTasksContainer');
+        if (!container) return;
+        try {
+          const res = await fetch('/api/autonomous/tasks');
+          if (!res.ok) return;
+          const tasks = await res.json();
+          const pendingApproval = (tasks || []).filter(t => t.requires_approval || t.status === 'approval_required');
+
+          if (pendingApproval.length === 0) {
+            container.classList.add('hidden');
+            container.innerHTML = '';
+            return;
+          }
+
+          container.classList.remove('hidden');
+          container.innerHTML = `
+            <div class="flex items-center justify-between text-amber-300 text-xs font-bold pb-1.5 border-b border-amber-500/20">
+              <span class="flex items-center gap-1.5"><span>⚠️</span><span>${pendingApproval.length} Self-Healing Action(s) Require Executive Approval</span></span>
+              <span class="text-[10px] font-normal text-slate-400">Polsia Approval Gate</span>
+            </div>
+            <div class="space-y-2 mt-2">
+              ${pendingApproval.map(t => `
+                <div class="p-2.5 rounded-lg bg-cyber-900/90 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div class="space-y-0.5">
+                    <div class="text-xs font-semibold text-white flex items-center gap-2">
+                      <span>${t.title}</span>
+                      <span class="px-1.5 py-0.2 rounded text-[9px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase">${t.assigned_agent || 'devops'}</span>
+                    </div>
+                    <div class="text-[11px] text-slate-400">${t.note || 'Polsia ReAct proposal awaiting 1-click execution'}</div>
+                  </div>
+                  <button onclick="window.approveAndExecuteTask('${t.id}')" id="btn-approve-${t.id}" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-emerald-600 hover:from-amber-400 hover:to-emerald-500 text-white text-xs font-bold whitespace-nowrap shadow-md transition flex items-center justify-center gap-1.5 hover:scale-[1.02]">
+                    <span>⚡</span><span>Approve & Execute Fix</span>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } catch (e) {}
+      };
+
+      window.approveAndExecuteTask = async function(taskId) {
+        const btn = document.getElementById(`btn-approve-${taskId}`);
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = `<span class="animate-spin">⚙️</span><span>Executing...</span>`;
+        }
+        showToast('Approving and executing self-healing task...', '⚡');
+        try {
+          await fetch(`/api/autonomous/tasks/${taskId}/approve`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ approver: 'Angel Burgos (CEO)' })
+          });
+          const execRes = await fetch(`/api/autonomous/tasks/${taskId}/execute`, { method: 'POST' });
+          const execData = await execRes.json();
+          showToast(`✓ Task executed successfully: ${execData.title || 'Completed'}`, '✓');
+
+          const drawer = document.getElementById('osRemediationConsoleDrawer');
+          const content = document.getElementById('osRemediationConsoleContent');
+          if (drawer) drawer.classList.remove('hidden');
+          if (content) {
+            content.innerHTML = `
+              <div class="text-emerald-400 font-bold flex items-center gap-1.5">
+                <span>✓</span><span>Task Approved & Executed Cleanly:</span>
+              </div>
+              <div class="text-white font-semibold mt-1">${execData.title}</div>
+              <div class="text-slate-400 text-[11px] mt-1 font-mono">${JSON.stringify(execData.output_payload || {}, null, 2)}</div>
+            `;
+          }
+          window.loadPendingRemediationTasks();
+        } catch (err) {
+          showToast(`Execution failed: ${err.message}`, '❌');
+        }
+      };
+
       // Expose all globals on window to prevent ReferenceErrors on inline onclick
       window.state = state;
       window.renderAll = renderAll;
+      window.loadPendingRemediationTasks();
 
       // Live Auto-Reload Watcher for Development Updates
       let currentAppVersion = null;

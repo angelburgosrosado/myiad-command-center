@@ -349,6 +349,61 @@ app.get('/api/admin/render/services', async (_req, res) => {
   }
 });
 
+// 4e. Action: Unified 1-Click Autonomous Self-Healing & Remediation
+app.post('/api/admin/actions/quick-remediate', async (req, res) => {
+  try {
+    const { action_type, service_id } = req.body;
+    
+    if (action_type === 'restart_render_services') {
+      const restart = await adminVault.triggerRenderServiceRestart(service_id);
+      return res.json({
+        success: restart.success,
+        action: 'restart_render_services',
+        message: restart.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (action_type === 'sync_and_deploy_iptv') {
+      const dbUrl = adminVault.getRawKey('DATABASE_URL') || process.env.DATABASE_URL || '';
+      const jwtSecret = adminVault.getRawKey('JWT_SECRET') || process.env.JWT_SECRET || '';
+      const result = await adminVault.syncIptvRemediation(dbUrl, jwtSecret);
+      return res.json({
+        success: result.success,
+        action: 'sync_and_deploy_iptv',
+        message: result.success ? 'Successfully synced credentials and triggered deploy on Render' : 'Sync encountered issues',
+        details: result.details,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (action_type === 'test_neon_pool') {
+      const probe = await adminVault.testIntegration('DATABASE_URL');
+      return res.json({
+        success: probe.success,
+        action: 'test_neon_pool',
+        message: probe.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    if (action_type === 'run_polsia_cycle') {
+      const cycle = await autonomousEngine.runAutonomousCycle();
+      return res.json({
+        success: true,
+        action: 'run_polsia_cycle',
+        message: `Polsia ReAct Cycle complete: Executed ${cycle.executedCount} task(s)`,
+        messages: cycle.messages,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    return res.status(400).json({ error: `Unknown action_type: ${action_type}` });
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // 5. Action: Push Telegram Alert or Digest
 app.post('/api/admin/actions/push-telegram', async (req, res) => {
   try {
