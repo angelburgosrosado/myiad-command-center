@@ -73,6 +73,12 @@ const MONITORED_ENDPOINTS = [
 ];
 
 // --- TELEMETRY & HEALTH CHECKS ---
+const SERVER_BUILD_TIME = Date.now().toString();
+
+app.get('/api/version', (_req, res) => {
+  res.json({ version: SERVER_BUILD_TIME, timestamp: new Date().toISOString() });
+});
+
 app.get('/api/health', async (_req, res) => {
   const vpsReachable = await testTcpPort('34.148.244.49', 5432, 2000);
   res.json({
@@ -386,9 +392,16 @@ app.post('/api/admin/actions/audit-prospect', async (req, res) => {
   }
 });
 
-// --- STATIC ASSETS & SPA ROUTING ---
-app.use(express.static(path.join(__dirname, '../public')));
+// --- STATIC ASSETS & SPA ROUTING (CACHE-BUSTED) ---
+app.use((_req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+app.use(express.static(path.join(__dirname, '../public'), { etag: false, maxAge: 0 }));
 app.get('*', (_req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
