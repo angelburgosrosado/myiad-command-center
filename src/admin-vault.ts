@@ -392,6 +392,121 @@ export class AdminVault {
     }
   }
 
+  // --- LIST RENDER SERVICES ---
+  public async listRenderServices(): Promise<any[]> {
+    const apiKey = this.getRawKey('RENDER_API_KEY');
+    if (!apiKey) return [];
+    try {
+      const allServices: any[] = [];
+      const resp = await fetch('https://api.render.com/v1/services?limit=100', {
+        headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' }
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (Array.isArray(data)) {
+          allServices.push(...data.map((d: any) => d.service || d));
+        }
+      }
+
+      // Check owners/workspaces
+      const ownersResp = await fetch('https://api.render.com/v1/owners?limit=20', {
+        headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' }
+      });
+      if (ownersResp.ok) {
+        const ownersData = await ownersResp.json();
+        if (Array.isArray(ownersData)) {
+          for (const item of ownersData) {
+            const owner = item.owner || item;
+            if (owner && owner.id) {
+              const sResp = await fetch(`https://api.render.com/v1/services?ownerId=${owner.id}&limit=100`, {
+                headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' }
+              });
+              if (sResp.ok) {
+                const sData = await sResp.json();
+                if (Array.isArray(sData)) {
+                  for (const sItem of sData) {
+                    const s = sItem.service || sItem;
+                    if (!allServices.some(existing => existing.id === s.id)) {
+                      allServices.push(s);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return allServices;
+    } catch {
+      return [];
+    }
+  }
+
+  // --- AUTOMATED 3-STEP IPTV REMEDIATION SYNC ---
+  public async syncIptvRemediation(databaseUrl: string, jwtSecret?: string): Promise<{ success: boolean; details: any[] }> {
+    const apiKey = this.getRawKey('RENDER_API_KEY');
+    if (!apiKey) return { success: false, details: [{ error: 'RENDER_API_KEY not configured in vault' }] };
+
+    const crypto = await import('crypto');
+    const secret = jwtSecret || crypto.randomBytes(16).toString('hex');
+    const allServices = await this.listRenderServices();
+    
+    // Find services by name or fallback to known IDs
+    let iptvServices = allServices.filter(s => 
+      s.name?.toLowerCase().includes('iptv') || 
+      (s.repo && s.repo.toLowerCase().includes('iptv'))
+    );
+
+    if (iptvServices.length === 0) {
+      const knownIds = ['srv-daffgtf40ujc73b38jo0', 'srv-daebvt9t0dsc739kcfh0'];
+      for (const id of knownIds) {
+        try {
+          const resp = await fetch(`https://api.render.com/v1/services/${id}`, {
+            headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' }
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            iptvServices.push(data.service || data);
+          }
+        } catch {}
+      }
+    }
+
+    const results = [];
+    for (const service of iptvServices) {
+      let existingVars: Array<{ key: string; value: string }> = [];
+      try {
+        const getEnv = await fetch(`https://api.render.com/v1/services/${service.id}/env-vars`, {
+          headers: { Authorization: `Bearer ${apiKey}`, Accept: 'application/json' }
+        });
+        if (getEnv.ok) {
+          const list = await getEnv.json();
+          existingVars = list.map((item: any) => item.envVar || item);
+        }
+      } catch {}
+
+      const envMap = new Map<string, string>();
+      existingVars.forEach(v => envMap.set(v.key, v.value));
+      envMap.set('DATABASE_URL', databaseUrl);
+      envMap.set('JWT_SECRET', secret);
+      envMap.set('NODE_ENV', 'production');
+
+      const payload = Array.from(envMap.entries()).map(([key, value]) => ({ key, value }));
+      const syncRes = await this.syncRenderEnvVars(service.id, payload);
+      results.push({
+        service_id: service.id,
+        service_name: service.name,
+        result: syncRes
+      });
+    }
+
+    return {
+      success: results.length > 0 && results.every(r => r.result.success),
+      details: results
+    };
+  }
+
   // --- TOOL AUTOMATION: GITHUB PULL REQUEST AUTOMATION ---
   public async createGitHubPR(params: {
     branch: string;

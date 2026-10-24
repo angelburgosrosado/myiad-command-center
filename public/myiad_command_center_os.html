@@ -1110,8 +1110,8 @@
             { label: 'Render iptv-worker', url: 'https://dashboard.render.com/worker/srv-daffgtf40ujc73b38jo0' }
           ],
           tasks: [
-            { id: 'iptv-1', title: 'Fix iptv-api (srv-daffgtf40ujc73b38jog) & iptv-worker (srv-daffgtf40ujc73b38jo0) exit(1) startup crash on Render', demand: 'deep', done: false, note: 'Render invoice #2941-7579 paid Oct 18; sync DATABASE_URL & JWT_SECRET' },
-            { id: 'iptv-2', title: 'Rotate exposed Neon PostgreSQL password (rapid-mud-93988182 / ep-winter-poetry-ae51hoth) and scrub token from docs', demand: 'low', done: false, note: 'Flagged by Neon Security on Oct 14' },
+            { id: 'iptv-1', title: 'Fix iptv-api (srv-daffgtf40ujc73b38jog) & iptv-worker (srv-daffgtf40ujc73b38jo0) exit(1) startup crash on Render', demand: 'deep', done: true, note: 'Resolved: synchronized DATABASE_URL & JWT_SECRET to active Neon cluster' },
+            { id: 'iptv-2', title: 'Rotate exposed Neon PostgreSQL password (rapid-mud-93988182 / ep-winter-poetry-ae51hoth) and scrub token from docs', demand: 'low', done: true, note: 'Remediated: rotated to ep-summer-block-b5fdfrpo, docs scrubbed & committed' },
             { id: 'iptv-3', title: 'Create Store-Safe Mobile Branch: position strictly as BYO-Playlist M3U/Xtream player with zero preloaded channels', demand: 'deep', done: false, note: 'Required for Google Play & Apple App Store guideline 5.2.3 compliance' },
             { id: 'iptv-4', title: 'Bundle public-domain demo M3U test account (NASA TV / Big Buck Bunny) for Google & Apple review teams', demand: 'steady', done: false, note: 'Prevents rejection for broken login during app review' },
             { id: 'iptv-5', title: 'Submit Android AAB to Google Play Console and Expo EAS iOS build to Apple TestFlight / App Store Connect', demand: 'steady', done: false, note: 'Keep direct APK sideload code 94218 on web-only /download route' }

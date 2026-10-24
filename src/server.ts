@@ -320,6 +320,30 @@ app.post('/api/admin/actions/sync-render-env', async (req, res) => {
   }
 });
 
+// 4c. Action: Automated 3-Step IPTV Remediation Sync
+app.post('/api/admin/actions/remediate-iptv', async (req, res) => {
+  try {
+    const databaseUrl = req.body.database_url || req.body.databaseUrl;
+    if (!databaseUrl) {
+      return res.status(400).json({ error: 'database_url is required' });
+    }
+    const result = await adminVault.syncIptvRemediation(databaseUrl, req.body.jwt_secret);
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// 4d. Action: List Render Services
+app.get('/api/admin/render/services', async (_req, res) => {
+  try {
+    const services = await adminVault.listRenderServices();
+    res.json(services);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 5. Action: Push Telegram Alert or Digest
 app.post('/api/admin/actions/push-telegram', async (req, res) => {
   try {
