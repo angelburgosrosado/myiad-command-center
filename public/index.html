@@ -3,219 +3,536 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MyIAD & AB Global — Full-Stack Cloud Control Plane & Multi-Agent Dashboard</title>
+  <title>MyIAD & AB Global — Polsia Autonomous Co-Founder & Operating System</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
           colors: {
-            slate: { 850: '#131c31', 950: '#090d16' }
+            obsidian: '#05070e',
+            cyber: {
+              950: '#060913',
+              900: '#0b1020',
+              850: '#10172e',
+              800: '#16203d',
+              700: '#23315a',
+              accent: '#6366f1',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e'
+            }
           }
         }
       }
     };
   </script>
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #090d16; color: #f1f5f9; }
-    .glass-panel { background: rgba(19, 28, 49, 0.82); backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.14); }
-    .glass-card { background: rgba(30, 41, 59, 0.58); border: 1px solid rgba(148, 163, 184, 0.12); transition: all 0.2s ease; }
-    .glass-card:hover { border-color: rgba(99, 102, 241, 0.45); transform: translateY(-1px); }
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 9999px; }
+    :root {
+      --bg-dark: #05070e;
+      --panel-bg: rgba(11, 16, 32, 0.78);
+      --card-bg: linear-gradient(135deg, rgba(16, 23, 44, 0.72) 0%, rgba(10, 14, 28, 0.62) 100%);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(99, 102, 241, 0.45);
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: #f1f5f9;
+      background-image: 
+        radial-gradient(circle at 12% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 88% 18%, rgba(6, 182, 212, 0.09) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(5, 7, 14, 0.8) 0%, #05070e 100%);
+      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Next-Gen Glassmorphic Panels */
+    .glass-panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    }
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 35px -5px rgba(0, 0, 0, 0.65), 0 0 25px -5px rgba(99, 102, 241, 0.25), inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+    }
+
+    /* Ambient Glows & Status Rings */
+    .glow-indigo { box-shadow: 0 0 30px -5px rgba(99, 102, 241, 0.4); }
+    .glow-cyan { box-shadow: 0 0 30px -5px rgba(6, 182, 212, 0.4); }
+    .glow-emerald { box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.4); }
+    .glow-amber { box-shadow: 0 0 30px -5px rgba(245, 158, 11, 0.4); }
+
+    .pulse-ring {
+      position: relative;
+    }
+    .pulse-ring::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 9999px;
+      background: inherit;
+      opacity: 0.75;
+      animation: pulse-ring 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.4); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+
+    /* Polished Scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(6, 9, 19, 0.7); }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.35); border-radius: 9999px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.6); }
+
     pre { white-space: pre-wrap; word-break: break-word; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-indigo-500/80 selection:text-white">
 
   <!-- Toast Notification -->
-  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 hidden">
-    <div class="bg-indigo-600 text-white px-4 py-3 rounded-xl shadow-2xl border border-indigo-400/30 flex items-center gap-3 text-sm font-medium">
-      <span id="toastIcon">✓</span>
-      <span id="toastMessage">Action completed</span>
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 hidden transition-all duration-300">
+    <div class="glass-panel px-4 py-3 rounded-2xl shadow-2xl border border-indigo-500/40 flex items-center gap-3 text-sm font-semibold glow-indigo">
+      <span id="toastIcon" class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-xs">✓</span>
+      <span id="toastMessage" class="text-white">Action completed</span>
     </div>
   </div>
 
   <!-- Energy Profile Modal -->
-  <div id="energyProfileModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-panel rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-700">
+  <div id="energyProfileModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-panel rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/10">
       <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-2.5">
-          <span class="text-xl">🔋</span>
-          <h3 class="text-lg font-bold text-white">Your Personal Energy Profile</h3>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-base">⚡</div>
+          <h3 class="text-base font-bold text-white tracking-tight">Executive Cognitive Rhythm & Bandwidth</h3>
         </div>
         <button id="closeProfileModalBtn" class="text-slate-400 hover:text-white px-2 py-1 rounded-lg">✕</button>
       </div>
-      <p class="text-xs text-slate-400 mb-4">Set your natural cognitive rhythms so the Control Plane sequences your 10 projects around your bandwidth rather than just deadlines.</p>
-      <div class="space-y-3 text-sm">
+      <p class="text-xs text-slate-400 mb-4">Set your natural focus cycles so the Polsia operator sequences complex engineering and high-leverage decisions to your peak mental hours.</p>
+      <div class="space-y-3.5 text-sm">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Peak Hours (When you are sharpest for 🔴 Deep Work)</label>
-          <input id="profPeakInput" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" value="8:30 AM – 12:00 PM & 8:00 PM – 10:30 PM" />
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Peak Hours (Deep Architecture & Code)</label>
+          <input id="profPeakInput" type="text" class="w-full bg-cyber-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs font-mono focus:border-indigo-500 focus:outline-none" value="8:30 AM – 12:00 PM & 8:00 PM – 10:30 PM" />
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Dip Window (When to stick to 🟢 Low Drain admin)</label>
-          <input id="profDipInput" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" value="2:00 PM – 4:00 PM & Late Night (>10:30 PM)" />
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Dip Window (Low-Drain Admin & Autonomous Sync)</label>
+          <input id="profDipInput" type="text" class="w-full bg-cyber-950 border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs font-mono focus:border-indigo-500 focus:outline-none" value="2:00 PM – 4:00 PM & Late Night (>10:30 PM)" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Chronotype</label>
-            <select id="profChronoInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Chronotype</label>
+            <select id="profChronoInput" class="w-full bg-cyber-950 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:border-indigo-500 focus:outline-none">
               <option value="Hybrid Builder (Morning + Night Surge)">Hybrid Builder (Morning + Night Surge)</option>
               <option value="Morning Architect">Morning Architect</option>
               <option value="Night Owl">Night Owl</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Biggest Energy Drain</label>
-            <input id="profDrainInput" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm" value="Context-switching across 10 repos/brands" />
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Context Burden</label>
+            <input id="profDrainInput" type="text" class="w-full bg-cyber-950 border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:border-indigo-500 focus:outline-none" value="10 active ecosystem portfolios" />
           </div>
         </div>
       </div>
       <div class="flex justify-end gap-2 mt-6">
-        <button id="cancelProfileBtn" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Cancel</button>
-        <button id="saveProfileBtn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold">Save Energy Profile</button>
+        <button id="cancelProfileBtn" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold transition">Cancel</button>
+        <button id="saveProfileBtn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">Save Profile</button>
       </div>
     </div>
   </div>
 
-  <!-- Top Header -->
-  <header class="glass-panel sticky top-0 z-40 border-b border-slate-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+  <!-- Top Executive Command Deck Header -->
+  <header class="glass-panel sticky top-0 z-40 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+      <!-- Brand & Identity -->
       <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-emerald-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 font-extrabold text-white text-base">
-            AB
+        <div class="flex items-center gap-3.5">
+          <div class="relative w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/25">
+            <div class="w-full h-full bg-cyber-950 rounded-[15px] flex items-center justify-center font-extrabold text-white text-sm tracking-wider">
+              AB
+            </div>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-cyber-950 pulse-ring"></span>
           </div>
           <div>
             <div class="flex items-center gap-2 flex-wrap">
-              <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">MyIAD & AB Global — Full-Stack Cloud Control Plane & Multi-Agent Dashboard</h1>
-              <span class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Render • Neon • VPS 34.148.244.49</span>
+              <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-white flex items-center gap-2">
+                <span>MyIAD & AB Global</span>
+                <span class="text-slate-500 font-normal">/</span>
+                <span class="bg-gradient-to-r from-indigo-300 via-purple-200 to-cyan-300 bg-clip-text text-transparent">Polsia OS 2.0</span>
+              </h1>
+              <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>24/7 OPERATOR ACTIVE</span>
+              </span>
             </div>
-            <p class="text-xs text-slate-400">Live Infrastructure Telemetry, Multi-Agent Compilers & 10-Project Execution • MyIAD • IPTV.Menu • Story.Menu • ClassroomAI • AB Global • Leafywell • Activotics • Piffkings • Sendput</p>
+            <p class="text-[11px] text-slate-400 flex items-center gap-2 font-mono mt-0.5">
+              <span>Render srv-daffgt</span>
+              <span class="text-slate-600">•</span>
+              <span>Neon ep-winter</span>
+              <span class="text-slate-600">•</span>
+              <span>VPS 34.148.244.49:5432 (OK)</span>
+            </p>
           </div>
         </div>
       </div>
 
-      <!-- Energy State Switcher & Global Actions -->
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800">
-          <span class="text-[11px] font-semibold text-slate-400 px-2">Bandwidth:</span>
-          <button id="energySharpBtn" data-energy="sharp" class="energy-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition">⚡ Sharp</button>
-          <button id="energySteadyBtn" data-energy="steady" class="energy-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition">⚖️ Steady</button>
-          <button id="energyFriedBtn" data-energy="fried" class="energy-btn px-2.5 py-1 rounded-lg text-xs font-semibold transition">🔋 Fried</button>
+      <!-- Quick Executive Controls & Bandwidth -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex items-center bg-cyber-950/80 p-1 rounded-2xl border border-white/10 shadow-inner">
+          <span class="text-[11px] font-semibold text-slate-400 px-2.5">Bandwidth:</span>
+          <button id="energySharpBtn" data-energy="sharp" class="energy-btn px-2.5 py-1 rounded-xl text-xs font-semibold transition">⚡ Sharp</button>
+          <button id="energySteadyBtn" data-energy="steady" class="energy-btn px-2.5 py-1 rounded-xl text-xs font-semibold transition">⚖️ Steady</button>
+          <button id="energyFriedBtn" data-energy="fried" class="energy-btn px-2.5 py-1 rounded-xl text-xs font-semibold transition">🔋 Fried</button>
         </div>
-        <button id="openProfileModalBtn" class="px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium flex items-center gap-1.5">
-          <span>⚙️</span><span>Energy Profile</span>
+        <button id="openProfileModalBtn" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition">
+          <span>⚙️</span><span>Rhythm</span>
         </button>
-        <button id="exportStateBtn" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 flex items-center gap-1.5">
-          <span>📋</span><span>Copy Master Report</span>
+        <button id="exportStateBtn" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/25 flex items-center gap-1.5 transition">
+          <span>📋</span><span>Master Report</span>
         </button>
       </div>
     </div>
 
-    <!-- Main Navigation Tabs -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 border-t border-slate-800/60">
-      <nav class="flex items-center gap-1 overflow-x-auto py-1.5 custom-scroll" aria-label="Primary Tabs">
-        <button data-tab="devops" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>🌐</span><span>Render • Neon • VPS Control Plane</span>
-          <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Live Probe</span>
+    <!-- Next-Gen Navigation Tabs Ribbon -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 border-t border-white/5">
+      <nav class="flex items-center gap-1.5 overflow-x-auto py-2 custom-scroll" aria-label="Primary Navigation">
+        <button data-tab="polsia" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition flex items-center gap-2 bg-gradient-to-r from-indigo-600/30 to-purple-600/30 text-indigo-300 border border-indigo-500/40 shadow-lg shadow-indigo-600/20">
+          <span>🤖</span><span>Polsia Co-Founder</span>
+          <span class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">24/7 Engine</span>
         </button>
-        <button data-tab="engines" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>⚡</span><span>Live Agent Execution Engines</span>
-          <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">4 Compilers</span>
+        <button data-tab="admin" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>🔐</span><span>Admin Secrets Vault</span>
+          <span class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">Keys & Tools</span>
         </button>
-        <button data-tab="backend" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>💻</span><span>Full-Stack Render + Neon Code</span>
+        <button data-tab="devops" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>🌐</span><span>Cloud Infrastructure</span>
+          <span class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">7 Fleet</span>
         </button>
-        <button data-tab="dashboard" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>🎯</span><span>10-Project Command Center</span>
+        <button data-tab="engines" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>⚡</span><span>Compilers & Kits</span>
         </button>
-        <button data-tab="studio" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>🤖</span><span>Agent Companion Studio</span>
+        <button data-tab="backend" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>💻</span><span>Full-Stack Blueprint</span>
         </button>
-        <button data-tab="skus" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>🌿</span><span>Leafywell & Activotics SKU Vault</span>
+        <button data-tab="dashboard" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>🎯</span><span>10-Project Portfolio</span>
         </button>
-        <button data-tab="geo" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>🚀</span><span>AI Search (GEO) & App Store Gate</span>
+        <button data-tab="studio" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>🎨</span><span>Agent Studio</span>
         </button>
-        <button data-tab="analytics" class="nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2">
-          <span>📊</span><span>Telemetry & Risk Radar</span>
+        <button data-tab="analytics" class="nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5">
+          <span>📊</span><span>Risk Radar</span>
         </button>
       </nav>
     </div>
   </header>
 
+
   <!-- Main Content Container -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
 
-    <!-- KPI Summary Strip -->
-    <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-      <div class="glass-card rounded-2xl p-4">
-        <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
-          <span>Overall Portfolio Progress</span>
-          <span class="text-indigo-400 font-bold" id="kpiProgressPct">3%</span>
+    <!-- TAB: POLSIA AUTONOMOUS OPERATOR & MISSION CONTROL DECK -->
+    <section id="tab-polsia" class="tab-section space-y-6">
+      
+      <!-- 4-Metric Autonomous Operator Ribbon -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Metric 1: Roadmaps -->
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10 relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition-all"></div>
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5 font-medium">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>Strategic Roadmaps</span>
+            <span id="polsiaRoadmapPctBadge" class="text-indigo-400 font-mono font-bold">100%</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-white tracking-tight" id="polsiaActiveGoalsCount">Active Initiatives</div>
+          <div class="w-full h-1.5 bg-white/5 rounded-full mt-2.5 overflow-hidden border border-white/5">
+            <div id="polsiaRoadmapProgressBar" class="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all duration-500" style="width: 100%"></div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-2 font-mono flex items-center justify-between">
+            <span id="polsiaSubtasksDoneRatio">All subtasks verified</span>
+            <span class="text-indigo-300">Auto-Healing ON</span>
+          </div>
         </div>
-        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
-          <div id="kpiProgressBar" class="h-full bg-gradient-to-r from-indigo-500 to-emerald-400 transition-all duration-300" style="width: 3%"></div>
+
+        <!-- Metric 2: 24/7 Heartbeat -->
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10 relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all"></div>
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5 font-medium">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Autonomous Daemon</span>
+            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ONLINE</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-emerald-400 tracking-tight flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>24/7 Heartbeat</span>
+          </div>
+          <div class="text-[11px] text-slate-300 mt-2 font-mono">60s background cycle • 0 fatal drops</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">Render Worker + PostgreSQL health pool</div>
         </div>
-        <div class="text-xs text-slate-300"><span id="kpiDoneCount" class="font-bold text-white">1</span> of <span id="kpiTotalCount">35</span> tasks completed</div>
+
+        <!-- Metric 3: Fleet Infrastructure -->
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10 relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/20 transition-all"></div>
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5 font-medium">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>Ecosystem Fleet</span>
+            <span class="text-cyan-400 font-mono font-bold">~38ms</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-cyan-300 tracking-tight">7 of 7 Reachable</div>
+          <div class="text-[11px] text-slate-300 mt-2 font-mono">saas • crm • iptv • story • sendput</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">VPS 34.148.244.49:5432 verified</div>
+        </div>
+
+        <!-- Metric 4: Human Gate Approvals -->
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10 relative overflow-hidden group">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5 font-medium">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Human Approval Gate</span>
+            <span class="text-amber-400 font-mono font-bold">Zero Risk</span>
+          </div>
+          <div class="text-xl sm:text-2xl font-extrabold text-white tracking-tight" id="polsiaApprovalKpiText">0 Pending</div>
+          <div class="text-[11px] text-slate-400 mt-2 font-mono">Auto-pauses git PRs & restarts</div>
+          <div class="text-[10px] text-slate-500 mt-0.5">1-click audit & sign-off required</div>
+        </div>
       </div>
 
-      <div class="glass-card rounded-2xl p-4">
-        <div class="text-xs text-slate-400 mb-1">Cloud Clusters Wired</div>
-        <div class="text-xl sm:text-2xl font-extrabold text-emerald-400" id="kpiCriticalCount">6 Active</div>
-        <div class="text-[11px] text-slate-400 mt-0.5">Render • Neon • VPS 5432 • Supabase • Cloud Run • Vercel</div>
+      <!-- Spotlight Goal Command Bar Deck -->
+      <div class="glass-panel rounded-3xl p-6 space-y-4 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div>
+            <div class="flex items-center gap-3 flex-wrap">
+              <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-600 to-cyan-400 flex items-center justify-center text-white font-extrabold text-base shadow-lg shadow-indigo-500/30">
+                🤖
+              </div>
+              <div>
+                <h2 class="text-base sm:text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+                  <span>Polsia Autonomous AI Co-Founder & Mission Control</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                  High-agency executive ReAct loop: decomposes objectives with Gemini 2.0 Flash, runs tools, inspects outputs, and executes self-healing.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button id="polsiaToggleModeBtn" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 text-xs font-semibold flex items-center gap-2 transition">
+              <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+              <span id="polsiaModeText">Mode: 24/7 God Mode</span>
+            </button>
+            <button id="polsiaRunCycleBtn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/25 flex items-center gap-2 transition">
+              <span>⚡</span><span>Run Heartbeat Now</span>
+            </button>
+            <button id="polsiaRecapBtn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/25 flex items-center gap-2 transition">
+              <span>☀️</span><span>Daily Briefing</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Spotlight Input Box -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <label for="polsiaGoalInput" class="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+              <span>Assign Autonomous Strategic Mission</span>
+            </label>
+            <span class="text-[11px] font-mono text-slate-400">Gemini 2.0 Flash Function Calling</span>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2.5">
+            <div class="relative flex-1">
+              <input id="polsiaGoalInput" type="text" placeholder="e.g. Audit all 7 endpoints, verify llms.txt crawlability, and draft an executive status briefing" class="w-full bg-cyber-950/90 border border-white/10 rounded-2xl px-5 py-3.5 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all font-sans shadow-inner" />
+              <div class="absolute right-3.5 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1.5 text-[10px] font-mono text-slate-500 bg-white/5 border border-white/10 px-2 py-1 rounded-lg">
+                <span>Enter ↵</span>
+              </div>
+            </div>
+            <button id="polsiaSubmitGoalBtn" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white text-xs font-bold shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98]">
+              <span>🚀</span><span>Decompose & Launch</span>
+            </button>
+          </div>
+          <!-- Preset Prompt Chips -->
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <span class="text-[11px] text-slate-400 font-medium mr-1">Quick Objectives:</span>
+            <button class="polsia-preset-btn text-[11px] bg-white/5 hover:bg-white/10 hover:border-indigo-500/40 text-slate-300 border border-white/10 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5" data-preset="Probe 7 ecosystem endpoints and verify /llms.txt coverage">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span>7-Domain Probe & llms.txt</span>
+            </button>
+            <button class="polsia-preset-btn text-[11px] bg-white/5 hover:bg-white/10 hover:border-indigo-500/40 text-slate-300 border border-white/10 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5" data-preset="Audit SendPut client pipeline and draft high-tier proposal markdown">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              <span>SendPut B2B Proposal Audit</span>
+            </button>
+            <button class="polsia-preset-btn text-[11px] bg-white/5 hover:bg-white/10 hover:border-indigo-500/40 text-slate-300 border border-white/10 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5" data-preset="Test VPS PostgreSQL 34.148.244.49 socket and run self-healing pool sync">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>VPS PostgreSQL 5432 TCP Probe</span>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div class="glass-card rounded-2xl p-4">
-        <div class="text-xs text-slate-400 mb-1">Tasks Matching Bandwidth</div>
-        <div class="text-xl sm:text-2xl font-extrabold text-amber-300" id="kpiEnergyMatchCount">14 Ready</div>
-        <div class="text-[11px] text-slate-400 mt-0.5" id="kpiEnergyMatchSub">Filtered for current energy state</div>
-      </div>
 
-      <div class="glass-card rounded-2xl p-4">
-        <div class="text-xs text-slate-400 mb-1">Live Agent Compilers</div>
-        <div class="text-xl sm:text-2xl font-extrabold text-indigo-400">4 Engines + 21 Kits</div>
-        <div class="text-[11px] text-slate-400 mt-0.5">SendPut Grader • Shopify CSV • Printful API • GEO Unifier</div>
+      <!-- Main Operational Split: Left = Roadmaps & Tasks, Right = 24/7 Agent Live Stream -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Left: Goals & Active Task Queue (7 Cols) -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-indigo-400">📋</span>
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Active Roadmaps & Autonomous Tasks</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="polsiaViewToggleBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1 transition">
+                <span>📊</span><span id="polsiaViewToggleText">Kanban View</span>
+              </button>
+              <span id="polsiaTaskCountBadge" class="px-2 py-0.5 rounded-full text-[11px] bg-slate-800 text-slate-300 border border-slate-700">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Goals List Container (Default View) -->
+          <div id="polsiaGoalsContainer" class="space-y-4">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- Kanban Columns Container (Kanban View) -->
+          <div id="polsiaKanbanContainer" class="hidden grid grid-cols-1 md:grid-cols-3 gap-3">
+            <!-- Columns: Pending, In Progress, Completed -->
+          </div>
+        </div>
+
+        <!-- Right: Real-Time Activity Feed & Morning Briefing (5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <!-- 24/7 Live Agent Stream -->
+          <div class="glass-panel rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">24/7 Agent Activity Stream</h3>
+              </div>
+              <button id="polsiaRefreshFeedBtn" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1">
+                <span>🔄</span><span>Sync</span>
+              </button>
+            </div>
+            <div id="polsiaFeedContainer" class="space-y-2.5 max-h-[420px] overflow-y-auto custom-scroll pr-1">
+              <!-- Logs populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Latest Morning Briefing Preview -->
+          <div class="glass-panel rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="text-amber-400">☀️</span>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Daily Operator Briefing</h3>
+              </div>
+              <span id="polsiaRecapDateBadge" class="text-[11px] text-slate-400 font-mono">Today</span>
+            </div>
+            <div id="polsiaRecapContent" class="text-xs text-slate-300 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 space-y-2 font-mono whitespace-pre-wrap">
+              Loading latest autonomous briefing...
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Energy-Matched Recommendation Banner -->
-    <section class="glass-panel rounded-2xl p-4 sm:p-5 border-l-4 border-l-indigo-500">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div class="space-y-1.5 flex-1">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span id="energyBannerBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">⚡ Bandwidth: Steady</span>
-            <span class="text-xs text-slate-400" id="energyProfileSummaryText">Peak: 8:30–12:00 & 8:00–10:30 PM • Chronotype: Hybrid Builder</span>
+    <!-- TAB: ADMINISTRATIVE SECRETS VAULT & TOOL AUTOMATIONS -->
+    <section id="tab-admin" class="tab-section hidden space-y-5">
+      <!-- Vault Summary Header -->
+      <div class="glass-panel rounded-2xl p-5 space-y-4">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-amber-500/20">
+                🔐
+              </div>
+              <h2 class="text-base sm:text-lg font-bold text-white">Administrative Secrets Vault & Automation Integrations</h2>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Multi-Tenant Vault: vault_app_angelburgosrosado
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">
+              Configure and test API credentials, permissions, and webhook endpoints to activate AI reasoning, self-healing Render restarts, GitHub pull requests, Telegram morning briefings, and SendPut prospecting.
+            </p>
           </div>
-          <h2 class="text-sm sm:text-base font-bold text-white" id="doNowHeadline">DO NOW: Recommended Single Next Action</h2>
-          <p class="text-xs sm:text-sm text-slate-300" id="doNowDescription">Loading recommendation...</p>
+          <div class="flex items-center gap-2">
+            <button id="refreshVaultBtn" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+              <span>🔄</span><span>Reload Vault</span>
+            </button>
+          </div>
         </div>
-        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
-          <button id="doNowStudioBtn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition flex items-center gap-1.5">
-            <span>🤖</span><span>Open in Agent Studio</span>
-          </button>
-          <button id="doNowCompleteBtn" class="px-3.5 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition">
-            ✓ Mark Done
-          </button>
+
+        <!-- Quick Integration Testing Matrix -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="vaultKeysGrid">
+          <!-- Dynamically populated key cards with 1-click test and save buttons -->
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 pt-3 border-t border-slate-800/80 text-xs">
-        <div class="flex items-start gap-2">
-          <span class="text-rose-400 font-bold shrink-0">SAVE FOR PEAK:</span>
-          <span class="text-slate-300" id="saveForLaterText">Loading...</span>
+
+      <!-- Live Automation Playground: 3 Interactive Control Cards -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <!-- Card 1: Zero-Touch Self-Healing & Render Restarts -->
+        <div class="glass-panel rounded-2xl p-5 space-y-3">
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-2.5">
+            <span class="text-amber-400 text-base">⚡</span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Zero-Touch Cloud Self-Healing</h3>
+          </div>
+          <p class="text-xs text-slate-400">Trigger on-demand service restarts or test connection healing via Render API.</p>
+          <div class="space-y-2 pt-1">
+            <label class="text-[11px] font-bold text-slate-300 block">Render Worker Target ID:</label>
+            <input id="actionRenderServiceInput" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" value="srv-daffgtf40ujc73b38jo0" />
+            <button id="actionTriggerRestartBtn" class="w-full mt-2 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow-md shadow-amber-600/20 flex items-center justify-center gap-2 transition">
+              <span>🔄</span><span>Trigger Emergency Service Restart</span>
+            </button>
+          </div>
         </div>
-        <div class="flex items-start gap-2">
-          <span class="text-emerald-400 font-bold shrink-0">5-MIN QUICK WIN:</span>
-          <span class="text-slate-300" id="quickWinText">Loading...</span>
+
+        <!-- Card 2: Telegram Morning Briefing Push -->
+        <div class="glass-panel rounded-2xl p-5 space-y-3">
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-2.5">
+            <span class="text-indigo-400 text-base">📲</span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Telegram Briefing Dispatcher</h3>
+          </div>
+          <p class="text-xs text-slate-400">Test sending the morning recap directly to your personal Telegram chat.</p>
+          <div class="space-y-2 pt-1">
+            <label class="text-[11px] font-bold text-slate-300 block">Custom Message Preview:</label>
+            <textarea id="actionTelegramMsgInput" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">☀️ Good morning Angel! All 7 ecosystem endpoints are healthy with 0 critical errors.</textarea>
+            <button id="actionSendTelegramBtn" class="w-full mt-1 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition">
+              <span>✈️</span><span>Dispatch Telegram Test Ping</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: SendPut Prospect Scraper & Audit Generator -->
+        <div class="glass-panel rounded-2xl p-5 space-y-3">
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-2.5">
+            <span class="text-emerald-400 text-base">💼</span>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">SendPut Prospect Scanner</h3>
+          </div>
+          <p class="text-xs text-slate-400">Scrape any client site, compute SFAI score, and generate a customized B2B proposal.</p>
+          <div class="space-y-2 pt-1">
+            <input id="actionProspectBusinessInput" type="text" placeholder="Client Name (e.g. Acme Corp)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" value="" />
+            <input id="actionProspectDomainInput" type="text" placeholder="Client Domain (e.g. https://example.com)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" value="" />
+            <button id="actionRunProspectAuditBtn" class="w-full mt-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 transition">
+              <span>🚀</span><span>Run Audit & Generate Proposal</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -474,31 +791,96 @@
     </section>
 
     <!-- TAB 1: 10-PROJECT COMMAND CENTER -->
-    <section id="tab-dashboard" class="tab-section hidden space-y-5">
+    <section id="tab-dashboard" class="tab-section hidden space-y-6">
+      <!-- Portfolio KPI Summary Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10">
+          <div class="flex items-center justify-between text-xs text-slate-400 mb-1 font-medium">
+            <span>Overall Portfolio Progress</span>
+            <span class="text-indigo-400 font-bold font-mono" id="kpiProgressPct">3%</span>
+          </div>
+          <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden mb-2 border border-white/5">
+            <div id="kpiProgressBar" class="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all duration-300" style="width: 3%"></div>
+          </div>
+          <div class="text-xs text-slate-300 font-mono"><span id="kpiDoneCount" class="font-bold text-white">1</span> of <span id="kpiTotalCount">35</span> tasks completed</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10">
+          <div class="text-xs text-slate-400 mb-1 font-medium">Cloud Clusters Wired</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono" id="kpiCriticalCount">6 Active</div>
+          <div class="text-[11px] text-slate-400 mt-1">Render • Neon • VPS 5432 • Supabase • Vercel</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10">
+          <div class="text-xs text-slate-400 mb-1 font-medium">Tasks Matching Bandwidth</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-amber-300 font-mono" id="kpiEnergyMatchCount">14 Ready</div>
+          <div class="text-[11px] text-slate-400 mt-1" id="kpiEnergyMatchSub">Filtered for current energy state</div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4.5 border border-white/10">
+          <div class="text-xs text-slate-400 mb-1 font-medium">Live Agent Compilers</div>
+          <div class="text-xl sm:text-2xl font-extrabold text-indigo-400 font-mono">4 Engines + 21 Kits</div>
+          <div class="text-[11px] text-slate-400 mt-1">SendPut Grader • Shopify CSV • Printful • GEO</div>
+        </div>
+      </div>
+
+      <!-- Energy-Matched Recommendation Banner -->
+      <div class="glass-panel rounded-2xl p-5 border-l-4 border-l-indigo-500 border border-white/10">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span id="energyBannerBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">⚡ Bandwidth: Steady</span>
+              <span class="text-xs text-slate-400" id="energyProfileSummaryText">Peak: 8:30–12:00 & 8:00–10:30 PM • Chronotype: Hybrid Builder</span>
+            </div>
+            <h2 class="text-sm sm:text-base font-bold text-white tracking-tight" id="doNowHeadline">DO NOW: Recommended Single Next Action</h2>
+            <p class="text-xs sm:text-sm text-slate-300" id="doNowDescription">Loading recommendation...</p>
+          </div>
+          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+            <button id="doNowStudioBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-lg shadow-indigo-600/20">
+              <span>🤖</span><span>Open in Agent Studio</span>
+            </button>
+            <button id="doNowCompleteBtn" class="px-4 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold transition">
+              ✓ Mark Done
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 pt-3 border-t border-white/5 text-xs font-mono">
+          <div class="flex items-start gap-2">
+            <span class="text-rose-400 font-bold shrink-0">SAVE FOR PEAK:</span>
+            <span class="text-slate-300" id="saveForLaterText">Loading...</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold shrink-0">5-MIN QUICK WIN:</span>
+            <span class="text-slate-300" id="quickWinText">Loading...</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Filter & Search Controls -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 glass-card p-3.5 rounded-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 glass-card p-4 rounded-2xl border border-white/10">
         <div class="flex items-center gap-1.5 flex-wrap">
-          <button data-cat="all" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white">All Projects (10)</button>
-          <button data-cat="saas" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">SaaS & AI Apps (4)</button>
-          <button data-cat="consulting" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Consulting & Agency (2)</button>
-          <button data-cat="wellness" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Wellness & Merch (3)</button>
-          <button data-cat="hold" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">On Hold (1)</button>
+          <button data-cat="all" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600 text-white shadow-md shadow-indigo-600/20">All Projects (10)</button>
+          <button data-cat="saas" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 hover:bg-white/10">SaaS & AI Apps (4)</button>
+          <button data-cat="consulting" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 hover:bg-white/10">Consulting & Agency (2)</button>
+          <button data-cat="wellness" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 hover:bg-white/10">Wellness & Merch (3)</button>
+          <button data-cat="hold" class="cat-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 hover:bg-white/10">On Hold (1)</button>
         </div>
 
         <div class="flex items-center gap-2">
-          <select id="energyTaskFilterSelect" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200">
+          <select id="energyTaskFilterSelect" class="bg-cyber-950 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
             <option value="all">All Task Tiers (🔴/🟡/🟢)</option>
             <option value="deep">🔴 Deep Work Only</option>
             <option value="steady">🟡 Steady Work Only</option>
             <option value="low">🟢 Low Drain Only</option>
           </select>
-          <input id="projectSearchInput" type="text" placeholder="Search projects, repos, tasks..." class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white w-48 sm:w-60 focus:outline-none focus:border-indigo-500" />
+          <input id="projectSearchInput" type="text" placeholder="Search projects, repos, tasks..." class="bg-cyber-950 border border-white/10 rounded-xl px-3.5 py-1.5 text-xs text-white w-48 sm:w-60 focus:outline-none focus:border-indigo-500 font-sans" />
         </div>
       </div>
 
       <!-- Projects Grid -->
       <div id="projectsGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-5"></div>
     </section>
+
 
     <!-- TAB 2: AGENT COMPANION STUDIO -->
     <section id="tab-studio" class="tab-section hidden space-y-5">
@@ -673,10 +1055,10 @@
   </main>
 
   <script>
-    const STORAGE_KEY = 'myiad_enterprise_control_plane_v3';
+    const STORAGE_KEY = 'myiad_enterprise_control_plane_v5';
 
     const DEFAULT_STATE = {
-      currentTab: 'devops',
+      currentTab: 'polsia',
       currentEnergy: 'steady',
       categoryFilter: 'all',
       energyTaskFilter: 'all',
@@ -1373,12 +1755,30 @@ CREATE TABLE IF NOT EXISTS command_tasks (
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && Array.isArray(parsed.projects)) {
-            return Object.assign({}, DEFAULT_STATE, parsed);
+            const merged = Object.assign({}, DEFAULT_STATE, parsed);
+            if (!merged.currentTab || merged.currentTab === 'devops') {
+              merged.currentTab = 'polsia';
+            }
+            if (window.location.hash) {
+              const h = window.location.hash.replace('#', '');
+              if (['polsia', 'admin', 'devops', 'engines', 'backend', 'dashboard', 'studio', 'analytics'].includes(h)) {
+                merged.currentTab = h;
+              }
+            }
+            return merged;
           }
         }
       } catch (e) {}
-      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      const def = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      if (window.location.hash) {
+        const h = window.location.hash.replace('#', '');
+        if (['polsia', 'admin', 'devops', 'engines', 'backend', 'dashboard', 'studio', 'analytics'].includes(h)) {
+          def.currentTab = h;
+        }
+      }
+      return def;
     }
+
 
     function saveState() {
       try {
@@ -1765,9 +2165,9 @@ When local and national buyers ask ChatGPT, Perplexity, or Google Gemini for the
       document.querySelectorAll('.nav-tab').forEach(btn => {
         const tab = btn.getAttribute('data-tab');
         if (tab === state.currentTab) {
-          btn.className = 'nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/20';
+          btn.className = 'nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-2 bg-gradient-to-r from-indigo-500/25 via-purple-500/20 to-cyan-500/15 text-white border border-indigo-500/50 shadow-lg shadow-indigo-500/20';
         } else {
-          btn.className = 'nav-tab px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60';
+          btn.className = 'nav-tab px-4 py-2 rounded-xl text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent';
         }
       });
 
@@ -1781,6 +2181,12 @@ When local and national buyers ask ChatGPT, Perplexity, or Google Gemini for the
 
       if (state.currentTab === 'analytics') {
         setTimeout(renderCharts, 50);
+      }
+      if (state.currentTab === 'polsia') {
+        fetchAutonomousData().then(renderPolsiaTab);
+      }
+      if (state.currentTab === 'admin') {
+        fetchVaultKeys().then(renderAdminVaultTab);
       }
     }
 
@@ -2170,6 +2576,659 @@ When local and national buyers ask ChatGPT, Perplexity, or Google Gemini for the
       copyTextToClipboard(lines.join('\n'), 'Master Markdown Report copied to clipboard!');
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // ========================================================================
+    // POLSIA AUTONOMOUS OPERATOR & TASK MANAGEMENT CLIENT
+    // ========================================================================
+    const autonomousState = {
+      goals: [],
+      tasks: [],
+      logs: [],
+      recaps: [],
+      mode: 'god_mode',
+      syncInterval: null
+    };
+
+    async function fetchAutonomousData() {
+      try {
+        const [goalsRes, tasksRes, logsRes, recapsRes] = await Promise.all([
+          fetch('/api/autonomous/goals').then(r => r.ok ? r.json() : []),
+          fetch('/api/autonomous/tasks').then(r => r.ok ? r.json() : []),
+          fetch('/api/autonomous/feed?limit=40').then(r => r.ok ? r.json() : []),
+          fetch('/api/autonomous/recaps').then(r => r.ok ? r.json() : [])
+        ]);
+        autonomousState.goals = goalsRes || [];
+        autonomousState.tasks = tasksRes || [];
+        autonomousState.logs = logsRes || [];
+        autonomousState.recaps = recapsRes || [];
+      } catch (err) {
+        console.warn('Autonomous API fetch failed, operating in fallback state:', err);
+      }
+    }
+
+    function renderPolsiaTab() {
+      // 0. Dynamic update of 4 Autonomous Ribbon Metric Cards
+      const totalTasks = autonomousState.tasks.length;
+      const doneTasks = autonomousState.tasks.filter(t => t.status === 'completed' || t.done).length;
+      const pendingApprovals = autonomousState.tasks.filter(t => t.status === 'approval_required').length;
+      const activeGoals = autonomousState.goals.filter(g => g.status !== 'completed').length;
+      const overallProgress = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : (autonomousState.goals.length > 0 ? 100 : 0);
+
+      const elActiveGoals = document.getElementById('polsiaActiveGoalsCount');
+      if (elActiveGoals) {
+        elActiveGoals.textContent = `${activeGoals || autonomousState.goals.length} Strategic ${autonomousState.goals.length === 1 ? 'Roadmap' : 'Roadmaps'}`;
+      }
+
+      const elPctBadge = document.getElementById('polsiaRoadmapPctBadge');
+      if (elPctBadge) {
+        elPctBadge.textContent = `${overallProgress}%`;
+      }
+
+      const elProgressBar = document.getElementById('polsiaRoadmapProgressBar');
+      if (elProgressBar) {
+        elProgressBar.style.width = `${overallProgress}%`;
+      }
+
+      const elRatioText = document.getElementById('polsiaSubtasksDoneRatio');
+      if (elRatioText) {
+        elRatioText.textContent = totalTasks > 0 ? `${doneTasks}/${totalTasks} Subtasks Verified` : 'All subtasks verified';
+      }
+
+      const elApprovalKpi = document.getElementById('polsiaApprovalKpiText');
+      if (elApprovalKpi) {
+        if (pendingApprovals > 0) {
+          elApprovalKpi.innerHTML = `<span class="text-amber-400 font-extrabold flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></span>${pendingApprovals} Pending Sign-off</span>`;
+        } else {
+          elApprovalKpi.textContent = '0 Pending (Auto-Pilot)';
+        }
+      }
+
+      // 1. Render Mode Badge & Button
+      const modeBadge = document.getElementById('polsiaActiveModeBadge');
+      const modeText = document.getElementById('polsiaModeText');
+      if (modeBadge && modeText) {
+        if (autonomousState.mode === 'god_mode') {
+          modeBadge.className = 'px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5 shadow-sm shadow-indigo-500/20';
+          modeBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span><span>24/7 GOD MODE ACTIVE</span>';
+          modeText.textContent = 'Mode: 24/7 God Mode';
+        } else {
+          modeBadge.className = 'px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 shadow-sm shadow-amber-500/20';
+          modeBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span><span>SUPERVISED (APPROVAL GATES)</span>';
+          modeText.textContent = 'Mode: Supervised';
+        }
+      }
+
+      // 2. Count badge in section header
+      const taskCountBadge = document.getElementById('polsiaTaskCountBadge');
+      if (taskCountBadge) {
+        taskCountBadge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-white/5 text-slate-300 border border-white/10';
+        taskCountBadge.textContent = `${doneTasks}/${totalTasks} Verified`;
+      }
+
+      // 3. Render Goals & Tasks
+      const goalsContainer = document.getElementById('polsiaGoalsContainer');
+      if (goalsContainer) {
+        if (autonomousState.goals.length === 0) {
+          goalsContainer.innerHTML = `
+            <div class="glass-card rounded-2xl p-10 text-center border border-white/10 relative overflow-hidden group">
+              <div class="w-16 h-16 rounded-3xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+                🎯
+              </div>
+              <h4 class="text-base font-extrabold text-white tracking-tight">No Active Roadmaps Queued</h4>
+              <p class="text-xs text-slate-400 max-w-md mx-auto mt-1 leading-relaxed">
+                Assign a high-level strategic mission using the command deck above or pick a quick objective preset to initialize your autonomous execution loop.
+              </p>
+            </div>
+          `;
+        } else {
+          goalsContainer.innerHTML = autonomousState.goals.map((goal, gIdx) => {
+            const goalTasks = autonomousState.tasks.filter(t => t.goal_id === goal.id);
+            const completedCount = goalTasks.filter(t => t.status === 'completed' || t.done).length;
+            const progress = goalTasks.length > 0 ? Math.round((completedCount / goalTasks.length) * 100) : (goal.progress_pct || 0);
+
+            return `
+              <div class="glass-panel rounded-2xl p-5 space-y-4 border border-white/10 relative overflow-hidden transition-all duration-300 hover:border-indigo-500/30">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-extrabold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 tracking-wider">
+                        MISSION #${gIdx + 1}
+                      </span>
+                      <span class="px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full ${goal.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'}">
+                        ● ${goal.status.toUpperCase()}
+                      </span>
+                      <span class="px-2 py-0.5 text-[10px] font-mono rounded-full bg-white/5 text-slate-400 border border-white/5">
+                        ${goal.mode === 'god_mode' ? '⚡ 24/7 God Mode' : '🛡️ Supervised'}
+                      </span>
+                    </div>
+                    <h4 class="text-base font-extrabold text-white tracking-tight pt-0.5">${escapeHtml(goal.title)}</h4>
+                    ${goal.description ? `<p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(goal.description)}</p>` : ''}
+                  </div>
+                  <div class="sm:text-right shrink-0 bg-cyber-950/60 p-2.5 rounded-xl border border-white/5">
+                    <div class="flex items-center sm:justify-end gap-2">
+                      <span class="text-xs font-mono font-bold text-slate-300">${progress}%</span>
+                      <span class="text-[10px] text-slate-500 font-mono">COMPLETE</span>
+                    </div>
+                    <div class="w-32 h-2 bg-white/5 rounded-full mt-1.5 overflow-hidden border border-white/10">
+                      <div class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 transition-all duration-700" style="width: ${progress}%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Subtask List -->
+                <div class="space-y-2.5">
+                  <div class="flex items-center justify-between text-[11px] font-mono text-slate-400 px-1">
+                    <span class="font-bold uppercase tracking-wider text-slate-400">Decomposed Action Plan (${goalTasks.length} Subtasks)</span>
+                    <span>Self-Healing Engine</span>
+                  </div>
+                  ${goalTasks.length === 0 ? '<p class="text-xs text-slate-500 italic p-3 text-center">Decomposing action plan into autonomous subtasks...</p>' : goalTasks.map(t => {
+                    let statusBadge = '';
+                    if (t.status === 'completed' || t.done) {
+                      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>VERIFIED</span>';
+                    } else if (t.status === 'in_progress') {
+                      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>EXECUTING</span>';
+                    } else if (t.status === 'approval_required') {
+                      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>SIGN-OFF REQUIRED</span>';
+                    } else {
+                      statusBadge = '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-mono font-semibold rounded-full bg-white/5 text-slate-400 border border-white/10">QUEUED</span>';
+                    }
+
+                    const roleBadges = {
+                      devops: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+                      engineer: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+                      researcher: 'bg-purple-500/15 text-purple-300 border-purple-500/30',
+                      copywriter: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+                      orchestrator: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                    };
+                    const agentStyle = roleBadges[t.assigned_agent] || 'bg-slate-800 text-slate-300 border-slate-700';
+
+                    return `
+                      <div class="glass-card rounded-xl p-3.5 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-200 hover:border-white/20 hover:bg-white/[0.04]">
+                        <div class="space-y-1.5 flex-1 min-w-0">
+                          <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs font-bold ${t.done || t.status === 'completed' ? 'line-through text-slate-500' : 'text-slate-100'}">${escapeHtml(t.title)}</span>
+                            ${statusBadge}
+                            <span class="text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded-md border ${agentStyle}">[${t.assigned_agent || 'orchestrator'}]</span>
+                          </div>
+                          ${t.note ? `<p class="text-[11px] text-slate-400 leading-snug">${escapeHtml(t.note)}</p>` : ''}
+                          ${t.output_payload ? `
+                            <div class="text-[10px] text-cyan-300 font-mono bg-cyber-950/90 px-3 py-2 rounded-lg border border-cyan-500/20 mt-1.5 overflow-x-auto max-h-24 custom-scroll">
+                              <span class="text-slate-500 select-none">$ output: </span>${escapeHtml(typeof t.output_payload === 'object' ? JSON.stringify(t.output_payload) : String(t.output_payload))}
+                            </div>
+                          ` : ''}
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 sm:self-center">
+                          ${t.status === 'approval_required' ? `
+                            <button onclick="window.approvePolsiaTask('${t.id}')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95">
+                              <span>✓</span><span>Sign-Off & Run</span>
+                            </button>
+                          ` : ''}
+                          ${t.status !== 'completed' && !t.done ? `
+                            <button onclick="window.executePolsiaTask('${t.id}')" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 hover:border-indigo-500/40 text-slate-200 border border-white/10 text-xs font-mono font-semibold flex items-center gap-1.5 transition-all hover:text-white">
+                              <span class="text-indigo-400">⚡</span><span>Run Step</span>
+                            </button>
+                          ` : ''}
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // 3B. Render Kanban Columns (if in kanban mode)
+      const kanbanContainer = document.getElementById('polsiaKanbanContainer');
+      const viewToggleText = document.getElementById('polsiaViewToggleText');
+
+      if (autonomousState.view === 'kanban') {
+        if (goalsContainer) goalsContainer.classList.add('hidden');
+        if (kanbanContainer) kanbanContainer.classList.remove('hidden');
+        if (viewToggleText) viewToggleText.textContent = 'List View';
+
+        const pending = autonomousState.tasks.filter(t => t.status === 'pending');
+        const active = autonomousState.tasks.filter(t => t.status === 'in_progress' || t.status === 'approval_required');
+        const done = autonomousState.tasks.filter(t => t.status === 'completed' || t.done);
+
+        const renderKanbanCol = (title, items, badgeClass, dotColor) => `
+          <div class="glass-panel rounded-2xl p-4 space-y-3 border border-white/10 flex flex-col h-full">
+            <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full ${dotColor}"></span>
+                <span class="text-xs font-extrabold text-white tracking-wider uppercase font-mono">${title}</span>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] rounded-full font-mono font-bold ${badgeClass}">${items.length}</span>
+            </div>
+            <div class="space-y-2.5 max-h-[520px] overflow-y-auto custom-scroll pr-1 flex-1">
+              ${items.length === 0 ? '<div class="text-[11px] text-slate-500 italic p-6 text-center border border-dashed border-white/5 rounded-xl">Lane empty</div>' : items.map(t => {
+                const roleBadges = {
+                  devops: 'text-cyan-300 bg-cyan-950/40 border-cyan-500/30',
+                  engineer: 'text-indigo-300 bg-indigo-950/40 border-indigo-500/30',
+                  researcher: 'text-purple-300 bg-purple-950/40 border-purple-500/30',
+                  copywriter: 'text-amber-300 bg-amber-950/40 border-amber-500/30',
+                  orchestrator: 'text-emerald-300 bg-emerald-950/40 border-emerald-500/30'
+                };
+                const agentStyle = roleBadges[t.assigned_agent] || 'text-slate-400 bg-slate-800 border-slate-700';
+
+                return `
+                  <div class="glass-card p-3 rounded-xl border border-white/10 space-y-2 hover:border-indigo-500/40 transition-all duration-200">
+                    <div class="flex items-center justify-between gap-1 text-[10px] font-mono">
+                      <span class="px-1.5 py-0.5 rounded border font-bold ${agentStyle}">[${t.assigned_agent || 'orchestrator'}]</span>
+                      <span class="text-slate-400 uppercase font-semibold text-[9px] px-1.5 py-0.5 bg-white/5 rounded">${t.priority || 'P1'}</span>
+                    </div>
+                    <h5 class="text-xs font-bold leading-snug ${t.done || t.status === 'completed' ? 'line-through text-slate-500' : 'text-slate-100'}">${escapeHtml(t.title)}</h5>
+                    ${t.note ? `<p class="text-[10px] text-slate-400 leading-tight">${escapeHtml(t.note)}</p>` : ''}
+                    <div class="flex items-center justify-between pt-1 border-t border-white/5">
+                      ${t.status === 'approval_required' ? `
+                        <button onclick="window.approvePolsiaTask('${t.id}')" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 transition">✓ Approve</button>
+                      ` : ''}
+                      ${t.status !== 'completed' && !t.done ? `
+                        <button onclick="window.executePolsiaTask('${t.id}')" class="px-2.5 py-1 text-[10px] font-mono font-semibold rounded-lg bg-white/5 hover:bg-indigo-600 hover:text-white text-indigo-300 border border-white/10 transition">⚡ Run</button>
+                      ` : '<span class="text-[10px] font-mono font-bold text-emerald-400 flex items-center gap-1"><span>✓</span><span>Done</span></span>'}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+
+        if (kanbanContainer) {
+          kanbanContainer.innerHTML = `
+            ${renderKanbanCol('Queued Backlog', pending, 'bg-white/5 text-slate-300 border border-white/10', 'bg-slate-400')}
+            ${renderKanbanCol('Active / Review', active, 'bg-amber-500/20 text-amber-300 border border-amber-500/30', 'bg-amber-400 animate-pulse')}
+            ${renderKanbanCol('Verified Complete', done, 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30', 'bg-emerald-400')}
+          `;
+        }
+      } else {
+        if (goalsContainer) goalsContainer.classList.remove('hidden');
+        if (kanbanContainer) kanbanContainer.classList.add('hidden');
+        if (viewToggleText) viewToggleText.textContent = 'Kanban View';
+      }
+
+      // 4. Render Activity Stream (Feed) with macOS Cyber-Terminal styling
+      const feedContainer = document.getElementById('polsiaFeedContainer');
+      if (feedContainer) {
+        if (autonomousState.logs.length === 0) {
+          feedContainer.innerHTML = '<div class="text-xs text-slate-500 font-mono italic p-6 text-center">No terminal logs recorded yet.</div>';
+        } else {
+          feedContainer.innerHTML = autonomousState.logs.map(log => {
+            let badgeTag = '[LOG]';
+            let color = 'text-slate-300';
+            let borderClass = 'border-l-2 border-slate-700 bg-cyber-950/70';
+            let tagColor = 'text-slate-400';
+
+            if (log.event_type === 'thought') {
+              badgeTag = '[REASONING]';
+              color = 'text-purple-200';
+              borderClass = 'border-l-2 border-purple-500 bg-purple-950/20';
+              tagColor = 'text-purple-400';
+            } else if (log.event_type === 'success') {
+              badgeTag = '[SUCCESS]';
+              color = 'text-emerald-200';
+              borderClass = 'border-l-2 border-emerald-500 bg-emerald-950/20';
+              tagColor = 'text-emerald-400';
+            } else if (log.event_type === 'approval_request') {
+              badgeTag = '[GATE REQ]';
+              color = 'text-amber-200';
+              borderClass = 'border-l-2 border-amber-500 bg-amber-950/25';
+              tagColor = 'text-amber-400';
+            } else if (log.event_type === 'execution_step') {
+              badgeTag = '[EXEC TOOL]';
+              color = 'text-cyan-200';
+              borderClass = 'border-l-2 border-cyan-500 bg-cyan-950/20';
+              tagColor = 'text-cyan-400';
+            } else if (log.event_type === 'error') {
+              badgeTag = '[ALERT]';
+              color = 'text-rose-200';
+              borderClass = 'border-l-2 border-rose-500 bg-rose-950/30';
+              tagColor = 'text-rose-400';
+            }
+
+            const timeStr = log.created_at ? new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '00:00:00';
+
+            return `
+              <div class="${borderClass} p-2.5 rounded-r-xl text-xs space-y-1 font-mono transition-all duration-200 hover:bg-white/[0.04]">
+                <div class="flex items-center justify-between text-[10px] text-slate-400">
+                  <span class="font-bold flex items-center gap-1.5">
+                    <span class="${tagColor} font-extrabold">${badgeTag}</span>
+                    <span class="text-slate-300 font-sans">${escapeHtml(log.agent_name || 'Agent')}</span>
+                  </span>
+                  <span class="text-slate-500 font-mono">${timeStr}</span>
+                </div>
+                <p class="${color} text-[11px] leading-relaxed font-sans">${escapeHtml(log.message)}</p>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // 5. Render Morning Recap
+      const recapContent = document.getElementById('polsiaRecapContent');
+      const recapDateBadge = document.getElementById('polsiaRecapDateBadge');
+      if (recapContent) {
+        if (autonomousState.recaps.length > 0) {
+          const latest = autonomousState.recaps[0];
+          if (recapDateBadge) recapDateBadge.textContent = latest.digest_date || 'Today';
+          recapContent.textContent = latest.summary_markdown || 'No summary available.';
+        } else {
+          recapContent.textContent = 'No morning briefing generated yet. Click "Daily Briefing" above to generate one now.';
+        }
+      }
+    }
+
+    async function executePolsiaTask(taskId) {
+      showToast('Executing autonomous task...', '⚙️');
+      try {
+        const res = await fetch(`/api/autonomous/tasks/${taskId}/execute`, { method: 'POST' });
+        if (res.ok) {
+          showToast('Task executed successfully!', '⚡');
+          await fetchAutonomousData();
+          renderPolsiaTab();
+        } else {
+          showToast('Task execution failed', '❌');
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Network error during task execution', '❌');
+      }
+    }
+    window.executePolsiaTask = executePolsiaTask;
+
+    async function approvePolsiaTask(taskId) {
+      try {
+        const res = await fetch(`/api/autonomous/tasks/${taskId}/approve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ approver: 'Angel Burgos' })
+        });
+        if (res.ok) {
+          showToast('Task approved! Queued for execution.', '✓');
+          await fetchAutonomousData();
+          renderPolsiaTab();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    window.approvePolsiaTask = approvePolsiaTask;
+
+    async function triggerPolsiaCycle() {
+      showToast('Running autonomous heartbeat cycle...', '⚡');
+      try {
+        const res = await fetch('/api/autonomous/cycle', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          showToast(`Autonomous cycle completed: ${data.executedCount} task(s) processed`, '🚀');
+          await fetchAutonomousData();
+          renderPolsiaTab();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function generatePolsiaRecap() {
+      showToast('Compiling today\'s autonomous briefing...', '☀️');
+      try {
+        const res = await fetch('/api/autonomous/recaps/generate', { method: 'POST' });
+        if (res.ok) {
+          showToast('Morning Briefing compiled & delivered!', '✓');
+          await fetchAutonomousData();
+          renderPolsiaTab();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function submitPolsiaGoal(title) {
+      if (!title || !title.trim()) return;
+      showToast('Decomposing strategic goal into subtasks...', '🤖');
+      try {
+        const res = await fetch('/api/autonomous/goals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title.trim(),
+            mode: autonomousState.mode,
+            autoDecompose: true
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showToast(`Goal decomposed into ${data.generatedTasks?.length || 0} subtasks!`, '🚀');
+          const input = document.getElementById('polsiaGoalInput');
+          if (input) input.value = '';
+          await fetchAutonomousData();
+          renderPolsiaTab();
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to queue goal', '❌');
+      }
+    }
+
+    // ========================================================================
+    // ADMINISTRATIVE SECRETS VAULT & TOOL AUTOMATION CONTROLLER
+    // ========================================================================
+    const adminVaultState = {
+      keys: []
+    };
+
+    async function fetchVaultKeys() {
+      try {
+        const res = await fetch('/api/admin/vault');
+        if (res.ok) {
+          adminVaultState.keys = await res.json();
+        }
+      } catch (err) {
+        console.warn('Failed to fetch admin vault keys:', err);
+      }
+    }
+
+    // Toggle Secret Key Masking
+    window.toggleVaultVisibility = function(keyName) {
+      const input = document.getElementById(`vault_input_${keyName}`);
+      const eye = document.getElementById(`vault_eye_${keyName}`);
+      if (input) {
+        if (input.type === 'password') {
+          input.type = 'text';
+          if (eye) eye.textContent = '🙈';
+        } else {
+          input.type = 'password';
+          if (eye) eye.textContent = '👁️';
+        }
+      }
+    };
+
+    function renderAdminVaultTab() {
+      const grid = document.getElementById('vaultKeysGrid');
+      if (!grid) return;
+
+      if (adminVaultState.keys.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center text-xs text-slate-400 p-8 glass-card rounded-2xl">Loading vault credentials...</div>';
+        return;
+      }
+
+      grid.innerHTML = adminVaultState.keys.map(k => {
+        let statusBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-white/5 text-slate-400 border border-white/10"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>UNCONFIGURED</span>';
+        if (k.status === 'active') {
+          statusBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm shadow-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>200 OK CONNECTED</span>';
+        } else if (k.status === 'configured') {
+          statusBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>CONFIGURED</span>';
+        } else if (k.status === 'invalid') {
+          statusBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>FAILED / INVALID</span>';
+        }
+
+        const categoryBadges = {
+          ai_models: { name: 'AI REASONING', icon: '🧠', color: 'text-indigo-300 bg-indigo-500/10 border-indigo-500/20' },
+          infra: { name: 'INFRASTRUCTURE', icon: '☁️', color: 'text-cyan-300 bg-cyan-500/10 border-cyan-500/20' },
+          git: { name: 'CI/CD & GIT', icon: '🐙', color: 'text-purple-300 bg-purple-500/10 border-purple-500/20' },
+          notifications: { name: 'DISPATCH', icon: '📢', color: 'text-amber-300 bg-amber-500/10 border-amber-500/20' },
+          prospecting: { name: 'B2B ENGINE', icon: '💼', color: 'text-emerald-300 bg-emerald-500/10 border-emerald-500/20' }
+        };
+
+        const cat = categoryBadges[k.category] || { name: 'CREDENTIAL', icon: '🔑', color: 'text-slate-300 bg-white/5 border-white/10' };
+
+        return `
+          <div class="glass-panel rounded-2xl p-4.5 space-y-3.5 border border-white/10 relative overflow-hidden transition-all duration-300 hover:border-indigo-500/30 hover:shadow-xl">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="px-2 py-0.5 rounded-md text-[9px] font-mono font-extrabold uppercase border ${cat.color}">
+                  ${cat.icon} ${cat.name}
+                </span>
+              </div>
+              <div class="shrink-0">
+                ${statusBadge}
+              </div>
+            </div>
+
+            <div>
+              <div class="text-xs font-bold text-white font-mono tracking-tight">${escapeHtml(k.key_name)}</div>
+              <p class="text-[11px] text-slate-400 mt-0.5 leading-snug">${escapeHtml(k.description)}</p>
+            </div>
+
+            <div class="space-y-2 pt-1">
+              <div class="relative">
+                <input 
+                  type="password" 
+                  id="vault_input_${k.key_name}" 
+                  value="${escapeHtml(k.key_value)}" 
+                  placeholder="Enter secret credential..." 
+                  class="w-full bg-cyber-950/90 border border-white/10 rounded-xl px-3.5 py-2 pr-9 text-xs text-slate-200 font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none transition-all shadow-inner" 
+                />
+                <button 
+                  type="button" 
+                  onclick="window.toggleVaultVisibility('${k.key_name}')" 
+                  id="vault_eye_${k.key_name}" 
+                  title="Toggle Visibility" 
+                  class="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white transition p-1"
+                >
+                  👁️
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2 pt-1">
+                <button onclick="window.testVaultKey('${k.key_name}')" class="flex-1 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 text-[11px] font-mono font-semibold border border-white/10 flex items-center justify-center gap-1.5 transition hover:text-white">
+                  <span>⚡</span><span>Test Integration</span>
+                </button>
+                <button onclick="window.saveVaultKey('${k.key_name}')" class="px-4 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-[11px] font-mono font-bold shadow-md shadow-indigo-600/30 transition hover:scale-[1.02] active:scale-[0.98]">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function testVaultKey(keyName) {
+      showToast(`Testing ${keyName} integration...`, '⚙️');
+      try {
+        const res = await fetch('/api/admin/vault/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key_name: keyName })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message, '✅');
+        } else {
+          showToast(data.message, '❌');
+        }
+        await fetchVaultKeys();
+        renderAdminVaultTab();
+      } catch (err) {
+        showToast('Integration test error', '❌');
+      }
+    }
+    window.testVaultKey = testVaultKey;
+
+    async function saveVaultKey(keyName) {
+      const input = document.getElementById(`vault_input_${keyName}`);
+      const val = input ? input.value : '';
+      showToast(`Saving ${keyName}...`, '🔐');
+      try {
+        const res = await fetch('/api/admin/vault', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key_name: keyName, key_value: val })
+        });
+        if (res.ok) {
+          showToast(`Saved ${keyName} to Administrative Vault!`, '✓');
+          await fetchVaultKeys();
+          renderAdminVaultTab();
+        }
+      } catch (err) {
+        showToast('Error saving key', '❌');
+      }
+    }
+    window.saveVaultKey = saveVaultKey;
+
+    async function triggerEmergencyRestart() {
+      const srvId = document.getElementById('actionRenderServiceInput')?.value || 'srv-daffgtf40ujc73b38jo0';
+      showToast(`Triggering emergency restart for ${srvId}...`, '⚡');
+      try {
+        const res = await fetch('/api/admin/actions/restart-render', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service_id: srvId })
+        });
+        const data = await res.json();
+        showToast(data.message, data.success ? '✓' : '⚠️');
+      } catch (err) {
+        showToast('Render restart request failed', '❌');
+      }
+    }
+
+    async function sendTelegramBriefingPing() {
+      const msg = document.getElementById('actionTelegramMsgInput')?.value || 'Test ping from MyIAD Command Center';
+      showToast('Dispatching Telegram briefing test...', '📲');
+      try {
+        const res = await fetch('/api/admin/actions/push-telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: msg })
+        });
+        const data = await res.json();
+        showToast(data.message, data.success ? '✈️' : '⚠️');
+      } catch (err) {
+        showToast('Telegram dispatch failed', '❌');
+      }
+    }
+
+    async function runProspectAudit() {
+      const name = document.getElementById('actionProspectBusinessInput')?.value || 'Target Client';
+      const domain = document.getElementById('actionProspectDomainInput')?.value || 'https://example.com';
+      showToast(`Auditing ${domain} via SendPut engine...`, '💼');
+      try {
+        const res = await fetch('/api/admin/actions/audit-prospect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ businessName: name, websiteUrl: domain })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          showToast(`Audit complete! Score: ${data.sfaiScore}/100 [${data.recommendedTier}]`, '🚀');
+          copyTextToClipboard(data.proposalMarkdown, 'Custom Audit Proposal copied to clipboard!');
+        }
+      } catch (err) {
+        showToast('SendPut audit failed', '❌');
+      }
+    }
+
     function renderAll() {
       renderKPIsAndEnergyBanner();
       renderNavigationTabs();
@@ -2177,12 +3236,29 @@ When local and national buyers ask ChatGPT, Perplexity, or Google Gemini for the
       renderStudioTab();
       renderSkuVault();
       renderGeoAndAppStoreTab();
+      if (state.currentTab === 'polsia') {
+        renderPolsiaTab();
+      }
+      if (state.currentTab === 'admin') {
+        renderAdminVaultTab();
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      // Sync on URL hash change
+      window.addEventListener('hashchange', () => {
+        const h = window.location.hash.replace('#', '');
+        if (h && h !== state.currentTab) {
+          state.currentTab = h;
+          saveState();
+          renderAll();
+        }
+      });
+
       document.querySelectorAll('.nav-tab').forEach(btn => {
         btn.addEventListener('click', () => {
           state.currentTab = btn.getAttribute('data-tab');
+          window.location.hash = state.currentTab;
           saveState();
           renderAll();
         });
@@ -2310,6 +3386,74 @@ When local and national buyers ask ChatGPT, Perplexity, or Google Gemini for the
       document.getElementById('copyBackendFileBtn')?.addEventListener('click', () => {
         const key = document.getElementById('backendFileSelect').value;
         copyTextToClipboard(BACKEND_FILES[key], 'Copied ' + key + '!');
+      });
+
+      // Polsia Autonomous Co-Founder Event Listeners
+      document.getElementById('polsiaToggleModeBtn')?.addEventListener('click', () => {
+        autonomousState.mode = autonomousState.mode === 'god_mode' ? 'supervised' : 'god_mode';
+        showToast(`Polsia mode switched to: ${autonomousState.mode.toUpperCase()}`, '⚙️');
+        renderPolsiaTab();
+      });
+
+      document.getElementById('polsiaRunCycleBtn')?.addEventListener('click', triggerPolsiaCycle);
+      document.getElementById('polsiaRecapBtn')?.addEventListener('click', generatePolsiaRecap);
+      document.getElementById('polsiaRefreshFeedBtn')?.addEventListener('click', async () => {
+        await fetchAutonomousData();
+        renderPolsiaTab();
+        showToast('Activity stream synced!', '🔄');
+      });
+
+      document.getElementById('polsiaSubmitGoalBtn')?.addEventListener('click', () => {
+        const val = document.getElementById('polsiaGoalInput')?.value;
+        submitPolsiaGoal(val);
+      });
+
+      document.getElementById('polsiaGoalInput')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          submitPolsiaGoal(e.target.value);
+        }
+      });
+
+      document.querySelectorAll('.polsia-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const preset = btn.getAttribute('data-preset');
+          const input = document.getElementById('polsiaGoalInput');
+          if (input) input.value = preset;
+          submitPolsiaGoal(preset);
+        });
+      });
+
+      // Polsia View Toggle (List vs Kanban)
+      document.getElementById('polsiaViewToggleBtn')?.addEventListener('click', () => {
+        autonomousState.view = autonomousState.view === 'list' ? 'kanban' : 'list';
+        renderPolsiaTab();
+        showToast(`Switched to ${autonomousState.view.toUpperCase()} view`, '📊');
+      });
+
+      // Admin Vault & Automation Action Listeners
+      document.getElementById('refreshVaultBtn')?.addEventListener('click', async () => {
+        await fetchVaultKeys();
+        renderAdminVaultTab();
+        showToast('Vault credentials refreshed!', '🔄');
+      });
+
+      document.getElementById('actionTriggerRestartBtn')?.addEventListener('click', triggerEmergencyRestart);
+      document.getElementById('actionSendTelegramBtn')?.addEventListener('click', sendTelegramBriefingPing);
+      document.getElementById('actionRunProspectAuditBtn')?.addEventListener('click', runProspectAudit);
+
+      // Auto-sync polling every 12 seconds when on polsia tab
+      setInterval(() => {
+        if (state.currentTab === 'polsia') {
+          fetchAutonomousData().then(renderPolsiaTab);
+        }
+      }, 12000);
+
+      fetchAutonomousData().then(() => {
+        if (state.currentTab === 'polsia') renderPolsiaTab();
+      });
+
+      fetchVaultKeys().then(() => {
+        if (state.currentTab === 'admin') renderAdminVaultTab();
       });
 
       renderAll();

@@ -26,6 +26,13 @@ services:
         sync: false
       - key: GITHUB_PAT
         sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: RENDER_WORKER_ID
+        value: srv-daffgtf40ujc73b38jo0
+
 
   - type: cron
     name: myiad-ecosystem-health-monitor
